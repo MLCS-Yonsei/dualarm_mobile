@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="dualarmbot_navigation" 
+        type="cmd_publisher.py" 
+        name="cmd_publisher"/>
+
+</launch>

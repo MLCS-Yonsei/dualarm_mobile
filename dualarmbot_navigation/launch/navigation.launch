@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Map path -->
+  <arg name="map_file" default="$(find dualarmbot_navigation)/maps/map.yaml"/>
+
+  <!-- Turtlebot3 bringup-->
+  <include file="$(find dualarmbot_bringup)/launch/robot.launch"/>
+
+  <!-- Map server -->
+  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+
+  <!-- AMCL -->
+  <include file="$(find dualarmbot_navigation)/launch/amcl.launch"/>
+
+  <!-- Move_base -->
+  <include file="$(find dualarmbot_navigation)/launch/move_base.launch"/>
+  
+  <!-- Cmd_publisher -->
+  <include file="$(find dualarmbot_navigation)/launch/cmd_publisher.launch"/>
+
+  <!-- run RViz node (visualization) -->
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find dualarmbot_navigation)/rviz/navigation.rviz">
+  </node>
+
+</launch>
