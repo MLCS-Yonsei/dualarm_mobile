@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <name>dualarmbot_teleop</name>
+  <version>0.0.1</version>
+  <description>Provides teleoperation using keyboard</description>
+  <license>GPLv3</license>
+
+  <author email="lim.yonsei@gmail.com">Jaehyun Lim</author>
+
+  <maintainer email="lim.yonsei@gmail.com">Jaehyun Lim</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>rospy</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+
+  <run_depend>rospy</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+
+  <export>
+
+  </export>
+</package>

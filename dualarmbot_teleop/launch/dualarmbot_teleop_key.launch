@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+  <node pkg="dualarmbot_teleop" type="dualarmbot_teleop_key" name="dualarmbot_teleop_keyboard"  output="screen">
+  </node>
+
+</launch>

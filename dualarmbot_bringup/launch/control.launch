@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+  <group ns="controller_group">
+    <!--<node pkg="dualarmbot_bringup" -->
+          <!--type="cmd_publish" -->
+          <!--name="cmd_pub"/>-->
+  
+    <node pkg="dualarmbot_bringup"
+          type="vehicle_controller"
+          name="control"/>
+  </group>
+
+</launch>
