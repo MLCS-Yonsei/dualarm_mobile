@@ -1,3 +1,3 @@
-# dualarm-mobile
+# dualarm_mobile
 
 ## updating...
