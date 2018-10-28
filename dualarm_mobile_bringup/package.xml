@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>dualarmbot_bringup</name>
+  <name>bringup_dual</name>
   <version>0.0.1</version>
-  <description>Machine Learning and Control System dual-arm robot</description>
+  <description>Machine Learning and Control System dual-arm simulator</description>
   <license>GPLv3</license>
 
   <author email="seungchul0406@gmail.com">Seungchul Ha</author>
@@ -12,7 +12,6 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>message_generation</build_depend>
   <build_depend>nav_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
@@ -21,6 +20,10 @@
   <build_depend>src</build_depend>
   <build_depend>worlds</build_depend>
   <build_depend>tf</build_depend>
+  <!--<build_depend>message_generation</build_depend>-->
+  <!--<build_depend>epos_tutorial</build_depend>-->
+  <!--<build_depend>mobile_control</build_depend>-->
+
 
   <run_depend>geometry_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
@@ -29,7 +32,12 @@
   <run_depend>launch</run_depend>
   <run_depend>src</run_depend>
   <run_depend>worlds</run_depend>
+  <run_depend>rospy</run_depend>
+  <!--<run_depend>message_runtime</run_depend>-->
 
+  <!--<run_depend>epos_tutorial</run_depend>-->
+  <!--<run_depend>mobile_control</run_depend>-->
+  
   <export>
 
   </export>

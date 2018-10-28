@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(dualarmbot_description)
+project(description_dual)
 
 find_package(catkin REQUIRED)
 

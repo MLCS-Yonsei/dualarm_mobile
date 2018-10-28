@@ -1,9 +1,12 @@
 #include <math.h>
 #include "ros/ros.h"
-#include "dualarmbot_bringup/commendMsg.h"
-#include "dualarmbot_bringup/motorsMsg.h"
+//#include "bringup_dual/commendMsg.h"
+//#include "mobile_control/motorsMsg.h"
 #include "nav_msgs/Odometry.h"
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Pose2D.h>
+#include <std_msgs/Int32MultiArray.h>
+#include <std_msgs/MultiArrayDimension.h>
 
 
 #define PI 3.14159265358979323846
@@ -22,12 +25,18 @@ double quat_act[4];
 
 // Callback function to subscribe //
 
-void cmdCallback(const dualarmbot_bringup::commendMsg::ConstPtr& cmd_msg)
+void cmdCallback(const geometry_msgs::Pose2D::ConstPtr& cmd_msg)
 {
-    pos_des[0]   = cmd_msg->xd;
-    pos_des[1]   = cmd_msg->yd;
-    pos_des[2]   = cmd_msg->phid;
+    pos_des[0]   = cmd_msg->x;
+    pos_des[1]   = cmd_msg->y;
+    pos_des[2]   = cmd_msg->theta;
 }
+//void cmdCallback(const bringup_dual::commendMsg::ConstPtr& cmd_msg)
+//{
+    //pos_des[0]   = cmd_msg->xd;
+    //pos_des[1]   = cmd_msg->yd;
+    //pos_des[2]   = cmd_msg->phid;
+//}
 
 void odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
 {
@@ -48,12 +57,12 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-  ros::init(argc,argv,"dualarmbot_bringup");
+  ros::init(argc,argv,"bringup_dual");
   ros::NodeHandle nh;
 
   //100 que size//
   ros::Publisher ctrl_pub=nh.advertise<geometry_msgs::Twist>("/cmd_vel",100);
-  ros::Publisher publ_input = nh.advertise<dualarmbot_bringup::motorsMsg>("/input_msg",100);
+  ros::Publisher publ_input = nh.advertise<std_msgs::Int32MultiArray>("/input_msg",100);
 
   // Quesize : 100 //
   ros::Subscriber sub1 = nh.subscribe("/ns1/cmd_msg",100,cmdCallback);
@@ -155,7 +164,8 @@ int main(int argc, char **argv)
   {
     
     geometry_msgs::Twist cmd_vel;
-    dualarmbot_bringup::motorsMsg input_msg;
+    //bringup_dual::motorsMsg input_msg;
+    std_msgs::Int32MultiArray input_msg;
 
 /*
     epos_tutorial::DesiredVel input_msg;
@@ -259,17 +269,20 @@ int main(int argc, char **argv)
     cmd_vel.linear.y  = u_y;
     cmd_vel.angular.z = u_p;
 
-
-    input_msg.omega1 = w1 * gear_ratio;
-    input_msg.omega2 = -w2 * gear_ratio;
-    input_msg.omega3 = w3 * gear_ratio;
-    input_msg.omega4 = -w4 * gear_ratio;
+    input_msg.data.clear();
+    input_msg.data.push_back(w1 * gear_ratio);
+    input_msg.data.push_back(-w2 * gear_ratio);
+    input_msg.data.push_back(w3 * gear_ratio);
+    input_msg.data.push_back(-w4 * gear_ratio);
+    //input_msg.omega1 = w1 * gear_ratio;
+    //input_msg.omega2 = -w2 * gear_ratio;
+    //input_msg.omega3 = w3 * gear_ratio;
+    //input_msg.omega4 = -w4 * gear_ratio;
 /*
     input_msg.vel1 = w1;
     input_msg.vel2 = w2;
     input_msg.vel3 = w3;
     input_msg.vel4 = w4;
-
 */
     ctrl_pub.publish(cmd_vel);
     publ_input.publish(input_msg);

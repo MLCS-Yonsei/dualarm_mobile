@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- urdf description -->
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find description_dual)/urdf/real_robot.urdf.xacro"/>
+  <param name="robot_description" command="$(arg urdf_file)"/>
+
+  <!-- State publisher -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" type="double" value="100.0" />
+  </node>
+
+  <!-- Joint state publisher -->
+  <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" output="screen">
+    <param name="publish_frequency" type="double" value="100.0" />
+  </node>
+
+  <!-- Controller -->
+  <group ns="controller_group">
+    <node pkg="bringup_dual" type="vehicle_controller" name="control"/>
+    <node pkg="bringup_dual" type="odom_publisher" name="odometry"/>
+    <node pkg="bringup_dual" type="tf_broadcaster" name="tf"/>
+  </group>
+    
+</launch>
