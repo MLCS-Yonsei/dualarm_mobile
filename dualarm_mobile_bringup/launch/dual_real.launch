@@ -23,9 +23,9 @@
   
   <!-- Controller -->
   <group ns="controller_group">
-    <node pkg="bringup_dual" type="vehicle_controller" name="control"/>
-    <node pkg="bringup_dual" type="odom_publisher" name="odometry"/>
-    <node pkg="bringup_dual" type="tf_broadcaster" name="tf"/>
+    <node pkg="dualarm_mobile_bringup" type="vehicle_controller" name="control"/>
+    <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odometry"/>
+    <node pkg="dualarm_mobile_bringup" type="tf_broadcaster" name="tf"/>
   </group>
     
 </launch>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include </home/seungchul/catkin_ws/src/dual_sim/slam_navi/include/flat_world_imu_node.h>
+#include </home/seungchul/catkin_ws/src/dualarm_mobile/dualarm_mobile_slam_navi/include/flat_world_imu_node.h>
 
 FlatWorldImuNode::FlatWorldImuNode()
 {

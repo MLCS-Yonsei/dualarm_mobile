@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <launch>
 	<!-- Map path -->
-  <arg name="map_file" default="$(find dualarm_mobile_slam_navi)/maps/map.yaml"/>
+  <!-- <arg name="map_file" default="$(find dualarm_mobile_slam_navi)/maps/map.yaml"/> -->
 	<!-- <arg name="configuration_basename" default="dual_lds_2d.lua"/> -->
   <!-- Map server -->
-  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+  <!-- <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/> -->
 
   <!-- cmd_publisher -->
   <node pkg="dualarm_mobile_slam_navi" type="cmd_publisher.py" name="cmd_publisher"/>
