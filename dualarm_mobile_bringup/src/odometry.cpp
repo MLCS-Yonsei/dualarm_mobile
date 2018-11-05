@@ -140,7 +140,7 @@ int main(int argc, char **argv)
 
 		nav_msgs::Odometry odom;
 
-		ros::Time currentTime = ros::Time(0);
+		ros::Time currentTime = ros::Time::now();
 
 		wheel_speed_lf = (double) w0 * rpm_to_radps;
 		wheel_speed_rf = (double) w1 * rpm_to_radps;

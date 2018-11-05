@@ -21,37 +21,20 @@ double pos_act[2];
 double vel_act[3];
 double quat_act[4];
 
+double linear_x_d;
+double linear_y_d;
+double angular_z_d;
 
 
 // Callback function to subscribe //
 
-void cmdCallback(const geometry_msgs::Pose2D::ConstPtr& cmd_msg)
+void cmdCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel)
 {
-    pos_des[0]   = cmd_msg->x;
-    pos_des[1]   = cmd_msg->y;
-    pos_des[2]   = cmd_msg->theta;
+    linear_x_d = cmd_vel->linear.x;
+    linear_y_d = cmd_vel->linear.y;
+    angular_z_d = cmd_vel->angular.z;
 }
-//void cmdCallback(const bringup_dual::commendMsg::ConstPtr& cmd_msg)
-//{
-    //pos_des[0]   = cmd_msg->xd;
-    //pos_des[1]   = cmd_msg->yd;
-    //pos_des[2]   = cmd_msg->phid;
-//}
 
-void odomCallback(const nav_msgs::Odometry::ConstPtr& msg)
-{
-    pos_act[0] = msg->pose.pose.position.x;
-    pos_act[1] = msg->pose.pose.position.y;
-
-    vel_act[0]  = msg->twist.twist.linear.x;
-    vel_act[1]  = msg->twist.twist.linear.y;
-    vel_act[2]  = msg->twist.twist.angular.z;
-
-    quat_act[0] = msg->pose.pose.orientation.x;
-    quat_act[1] = msg->pose.pose.orientation.y;
-    quat_act[2] = msg->pose.pose.orientation.z;
-    quat_act[3] = msg->pose.pose.orientation.w;
-}
 
 // Main function //
 
@@ -61,18 +44,16 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
 
   //100 que size//
-  ros::Publisher ctrl_pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel",100);
   ros::Publisher publ_input = nh.advertise<std_msgs::Int32MultiArray>("/input_msg",100);
 
   // Quesize : 100 //
-  ros::Subscriber sub1 = nh.subscribe("/ns1/cmd_msg",100,cmdCallback);
-  ros::Subscriber sub2 = nh.subscribe("/odom",100,odomCallback);
+  ros::Subscriber sub1 = nh.subscribe("/cmd_vel",100,cmdCallback);
 
-  // Publish rate : 50Hz //
-  ros::Rate loop_rate(50);
+  // Publish rate : 100Hz //
+  ros::Rate loop_rate(100);
 
   // time unit : sec & loop time = 1/50 sec (50Hz) //
-  double dt = 0.02;
+  double dt = 0.01;
 
 
 //** Initialization **//
@@ -120,9 +101,9 @@ int main(int argc, char **argv)
   double del_s[2]={0,0};
   double vel_linear;
 
-  double u_x = 0;
-  double u_y = 0;
-  double u_p = 0;
+  //double u_x = 0;
+  //double u_y = 0;
+  //double u_p = 0;
 
 // Linear velocity : 0.2m/s , dphidt constraint :  10 deg/sec ( 0.174 rad/sec ), and scale factor  //
   double v_lim       = 0.35;
@@ -163,13 +144,8 @@ int main(int argc, char **argv)
   while(ros::ok())
   {
     
-    geometry_msgs::Twist cmd_vel;
-    //bringup_dual::motorsMsg input_msg;
     std_msgs::Int32MultiArray input_msg;
 
-/*
-    epos_tutorial::DesiredVel input_msg;
-*/
     // Current values from reference  phi --> rad//
     x_d[1]      = pos_des[0];
     y_d[1]      = pos_des[1];
@@ -198,34 +174,26 @@ int main(int argc, char **argv)
     angle = atan2(y_d[1]-y_act[1],x_d[1]-x_act[1]);
 
 
-   /* PID control */
+    /* PID control */
+ 
+    del_s[1] = sqrt( (x_d[1] - x_act[1]) * (x_d[1] - x_act[1]) + (y_d[1] - y_act[1]) * (y_d[1] - y_act[1]));
+   
+    vel_linear = kp_s * del_s[1] + kd_s * ( del_s[1] - del_s[0] ) / dt + ki_s * Is;
+ 
+    u_p =  kp_phi * (phi_d[1]-phi_act[1])
+          +kd_phi * ((phi_d[1] - phi_d[0])-(phi_act[1] - phi_act[0]))/dt
+          +ki_phi * Iphi;
 
-  del_s[1] = sqrt( (x_d[1] - x_act[1]) * (x_d[1] - x_act[1]) + (y_d[1] - y_act[1]) * (y_d[1] - y_act[1]));
   
-  vel_linear = kp_s * del_s[1] + kd_s * ( del_s[1] - del_s[0] ) / dt + ki_s * Is;
+	vel_linear = sqrt(linear_x_d**2+linear_y_d**2);
 
-  u_p =  kp_phi * (phi_d[1]-phi_act[1])
-        +kd_phi * ((phi_d[1] - phi_d[0])-(phi_act[1] - phi_act[0]))/dt
-        +ki_phi * Iphi;
-
-  
-
-
-    if(vel_linear>v_lim)
+	if(vel_linear>v_lim)
     {
+		vel_angular = v_lim * vel_angular / vel_linear;
         vel_linear = v_lim;
 
     }
 
-    if(dphidt_lim < u_p)
-    {
-      u_p = dphidt_lim;
-    }
-    else if(-dphidt_lim > u_p)
-    {
-      u_p = -dphidt_lim;
-
-    }
 
     u_x = vel_linear * cosf(angle-phi_act[1]);
     u_y = vel_linear * sinf(angle-phi_act[1]);
