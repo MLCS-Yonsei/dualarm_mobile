@@ -61,7 +61,7 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
 
   //100 que size//
-  ros::Publisher ctrl_pub=nh.advertise<geometry_msgs::Twist>("/cmd_vel",100);
+  ros::Publisher ctrl_pub = nh.advertise<geometry_msgs::Twist>("/cmd_vel",100);
   ros::Publisher publ_input = nh.advertise<std_msgs::Int32MultiArray>("/input_msg",100);
 
   // Quesize : 100 //

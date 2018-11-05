@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- urdf description -->
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find description_dual)/urdf/real_robot.urdf.xacro"/>
+  <param name="robot_description" command="$(arg urdf_file)"/>
+
+  <!-- EKF odom -->
+  <!-- <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
+    <param name="output_frame" value="odom_combined"/>
+    <param name="base_footprint_frame" value="base_footprint"/>
+    <param name="freq" value="30.0"/>
+    <param name="sensor_timeout" value="1.0"/>  
+    <param name="odom_used" value="true"/>
+    <param name="imu_used" value="true"/>
+    <param name="vo_used" value="false"/>
+    <remap from="imu_data" to="/imu" />     -->
+  
+  <!-- State_publisher -->
+  <!-- <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="50.0" />
+  </node> -->
+  
+  <!-- Controller -->
+  <group ns="controller_group">
+    <node pkg="bringup_dual" type="vehicle_controller" name="control"/>
+    <node pkg="bringup_dual" type="odom_publisher" name="odometry"/>
+    <node pkg="bringup_dual" type="tf_broadcaster" name="tf"/>
+  </group>
+    
+</launch>
