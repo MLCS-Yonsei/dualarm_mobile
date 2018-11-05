@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>bringup_dual</name>
+  <name>dualarm_mobile_bringup</name>
   <version>0.0.1</version>
   <description>Machine Learning and Control System dual-arm simulator</description>
   <license>GPLv3</license>

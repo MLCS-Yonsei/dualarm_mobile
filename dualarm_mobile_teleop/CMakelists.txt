@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(dualarmbot_teleop)
+project(dualarmbot_mobile_teleop)
 
 ## Find catkin macros and libraries
 
@@ -24,12 +24,12 @@ target_link_libraries(turtlebot_teleop_joy ${catkin_LIBRARIES})
 
 # Mark executable scripts (Python etc.) for installation
 install(PROGRAMS
-  scripts/dualarmbot_teleop_key
+  scripts/dual_teleop_key
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 # Mark executables and/or libraries for installation
-install(TARGETS dualarmbot_teleop_joy
+install(TARGETS dual_teleop_joy
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

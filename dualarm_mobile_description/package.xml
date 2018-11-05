@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>description_dual</name>
+  <name>dualarm_mobile_description</name>
   <version>0.0.1</version>
   <description>Robot descriptions in form of URDF files and meshes</description>
 

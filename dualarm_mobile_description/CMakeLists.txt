@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(description_dual)
+project(dualarm_mobile_description)
 
 find_package(catkin REQUIRED)
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(bringup_dual)
+project(dualarm_mobile_bringup)
 
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
@@ -26,7 +26,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 catkin_package(
   LIBRARIES 
-    bringup_dual
+    dualarm_mobile_bringup
   CATKIN_DEPENDS 
     geometry_msgs 
     nav_msgs 

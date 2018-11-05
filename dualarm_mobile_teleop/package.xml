@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>dualarmbot_teleop</name>
+  <name>dualarmbot_mobile_teleop</name>
   <version>0.0.1</version>
   <description>Provides teleoperation using keyboard</description>
   <license>GPLv3</license>

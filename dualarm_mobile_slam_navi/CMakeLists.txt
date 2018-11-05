@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(slam_navi)
+project(dualarm_mobile_slam_navi)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
