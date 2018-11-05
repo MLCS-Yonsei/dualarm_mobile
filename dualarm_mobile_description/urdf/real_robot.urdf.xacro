@@ -55,14 +55,14 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/base_link.STL" />
+                <mesh filename="package://dualarm_mobile_description/meshes/base_link.STL" />
             </geometry>
             <material name="light_grey"/>
         </visual>
         <collision>
         <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/base_link.STL" />
+                <mesh filename="package://dualarm_mobile_description/meshes/base_link.STL" />
             </geometry>
         </collision>
     </link>
@@ -82,7 +82,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/br_wheel_link.STL" />
+                <mesh filename="package://dualarm_mobile_description/meshes/br_wheel_link.STL" />
             </geometry>
             <material name="orange"/>
         </visual>
@@ -110,7 +110,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/bl_wheel_link.STL" />
+                <mesh filename="package://dualarm_mobile_description/meshes/bl_wheel_link.STL" />
             </geometry>
             <material name="orange"/>
         </visual>
@@ -138,7 +138,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/fr_wheel_link.STL" />
+                <mesh filename="package://dualarm_mobile_description/meshes/fr_wheel_link.STL" />
             </geometry>
             <material name="orange"/>
         </visual>
@@ -166,7 +166,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/fl_wheel_link.STL" />
+                <mesh filename="package://dualarm_mobile_description/meshes/fl_wheel_link.STL" />
             </geometry>
             <material name="orange"/>
         </visual>
@@ -202,14 +202,14 @@
         <visual>
             <origin xyz="0 0 0.0" rpy="0 0 0"/>
             <geometry>
-                <mesh filename="package://description_dual/meshes/hokuyo.dae" />
+                <mesh filename="package://dualarm_mobile_description/meshes/hokuyo.dae" />
             </geometry>
             <material name="dark_grey"/>
         </visual>
         <collision>
             <origin xyz="0 0 0.0" rpy="0 0 0"/>
             <geometry>
-                <mesh filename="package://description_dual/meshes/hokuyo_convex.dae" />
+                <mesh filename="package://dualarm_mobile_description/meshes/hokuyo_convex.dae" />
             </geometry>
         </collision>
     </link>
@@ -229,7 +229,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/max_sonar_ez4.dae"/>
+                <mesh filename="package://dualarm_mobile_description/meshes/max_sonar_ez4.dae"/>
             </geometry>
         </visual>
         <collision>
@@ -255,7 +255,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/max_sonar_ez4.dae"/>
+                <mesh filename="package://dualarm_mobile_description/meshes/max_sonar_ez4.dae"/>
             </geometry>
         </visual>
         <collision>
@@ -281,7 +281,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/max_sonar_ez4.dae"/>
+                <mesh filename="package://dualarm_mobile_description/meshes/max_sonar_ez4.dae"/>
             </geometry>
         </visual>
         <collision>
@@ -307,7 +307,7 @@
         <visual>
             <origin xyz="0 0 0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/max_sonar_ez4.dae"/>
+                <mesh filename="package://dualarm_mobile_description/meshes/max_sonar_ez4.dae"/>
             </geometry>
         </visual>
         <collision>
@@ -333,13 +333,13 @@
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/kinect.dae"/>
+                <mesh filename="package://dualarm_mobile_description/meshes/kinect.dae"/>
             </geometry>
         </visual>
         <collision>
             <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
             <geometry>
-                <mesh filename="package://description_dual/meshes/kinect.dae"/>
+                <mesh filename="package://dualarm_mobile_description/meshes/kinect.dae"/>
             </geometry>
         </collision>
     </link>
