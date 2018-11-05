@@ -11,9 +11,14 @@ int main(int argc, char **argv)
 
 	ros::Rate loop_rate(1000);
 
+	rosgraph_msgs::Clock msg;
+
 	while(ros::ok())
 	{
-		time_pub.publish(ros::Time::now());
+		msg.clock = ros::Time::now();
+		time_pub.publish(msg);
 	}
+
+	return 0;
 
 }

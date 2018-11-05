@@ -49,8 +49,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(vehicle_controller src/vehicle_controller.cpp)
-target_link_libraries(vehicle_controller ${catkin_LIBRARIES})
+#add_executable(vehicle_controller src/vehicle_controller.cpp)
+#target_link_libraries(vehicle_controller ${catkin_LIBRARIES})
 #add_dependencies(vehicle_controller vehicle_control_generate_messages_cpp)
 #add_dependencies(vehicle_controller ${catkin_EXPORTED_TARGETS})
 # add_dependencies(vehicle_controller ${catkin_EXPORTED_TARGETS})
@@ -61,5 +61,5 @@ target_link_libraries(odom_publisher ${catkin_LIBRARIES})
 add_executable(tf_broadcaster src/tf_broadcaster.cpp)
 target_link_libraries(tf_broadcaster ${catkin_LIBRARIES})
 
-add_executable(time_publisher src/time_publiser.cpp)
-target_link_libraries(tf_broadcaster ${catkin_LIBRARIES})
+add_executable(time_publisher src/time_publisher.cpp)
+target_link_libraries(time_publisher ${catkin_LIBRARIES})
