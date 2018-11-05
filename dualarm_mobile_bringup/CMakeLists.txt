@@ -49,8 +49,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-#add_executable(vehicle_controller src/vehicle_controller.cpp)
-#target_link_libraries(vehicle_controller ${catkin_LIBRARIES})
+add_executable(vehicle_controller src/vehicle_controller.cpp)
+target_link_libraries(vehicle_controller ${catkin_LIBRARIES})
 #add_dependencies(vehicle_controller vehicle_control_generate_messages_cpp)
 #add_dependencies(vehicle_controller ${catkin_EXPORTED_TARGETS})
 # add_dependencies(vehicle_controller ${catkin_EXPORTED_TARGETS})

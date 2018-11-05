@@ -210,6 +210,8 @@ int main(int argc, char **argv)
 		}
 
 		odom_pub.publish(odom);
+		ros::spinOnce();
+		loop_rate.sleep();
 
 	}
 

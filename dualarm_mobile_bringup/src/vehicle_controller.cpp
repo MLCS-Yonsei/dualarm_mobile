@@ -12,22 +12,12 @@
 #define PI 3.14159265358979323846
 
 /* Declare Global Variables */
-
-// From commend_msg //
-double pos_des[3];
-
-// From odometry msg //
-double pos_act[2];
-double vel_act[3];
-double quat_act[4];
-
 double linear_x_d;
 double linear_y_d;
 double angular_z_d;
 
 
 // Callback function to subscribe //
-
 void cmdCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel)
 {
     linear_x_d = cmd_vel->linear.x;
@@ -37,7 +27,6 @@ void cmdCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel)
 
 
 // Main function //
-
 int main(int argc, char **argv)
 {
   ros::init(argc,argv,"bringup_dual");
@@ -52,58 +41,11 @@ int main(int argc, char **argv)
   // Publish rate : 100Hz //
   ros::Rate loop_rate(100);
 
-  // time unit : sec & loop time = 1/50 sec (50Hz) //
-  double dt = 0.01;
-
-
-//** Initialization **//
-  // reference {prev, current} //
-  double x_d[2]      = {0, 0};
-  double y_d[2]      = {0, 0};
-  double phi_d[2]    = {0, 0};
-  
-  // From Odometry //
-  double x_act[2]    = {0, 0};
-  double y_act[2]    = {0, 0};
-  double phi_act[2]  = {0, 0};
-
-  double vx_act[2]   = {0, 0};
-  double vy_act[2]   = {0, 0};
-  double dphi_act[2] = {0, 0};
-
-  double x_quat   = 0;
-  double y_quat   = 0;
-  double z_quat   = 0;
-  double w_quat   = 0;
-
-  double angle = 0;
-
-//** Controller gains Setting **//
-
-  // P control //
-  double kp_s = 1.0;
-  double kp_phi = 10.0;
-
-  // D control //
-  double kd_s = 0.0; 
-  double kd_phi = 0.0;
-
-  // I control //
-  double ki_s = 0.0;
-  double ki_phi = 0.0;
-
-  // accumulated error //
-  double Is = 0.0;
-  double Iphi = 0.0;
-
-// Input(Velocity) //
-
-  double del_s[2]={0,0};
   double vel_linear;
 
-  //double u_x = 0;
-  //double u_y = 0;
-  //double u_p = 0;
+  double u_x = 0;
+  double u_y = 0;
+  double u_p = 0;
 
 // Linear velocity : 0.2m/s , dphidt constraint :  10 deg/sec ( 0.174 rad/sec ), and scale factor  //
   double v_lim       = 0.35;
@@ -146,58 +88,20 @@ int main(int argc, char **argv)
     
     std_msgs::Int32MultiArray input_msg;
 
-    // Current values from reference  phi --> rad//
-    x_d[1]      = pos_des[0];
-    y_d[1]      = pos_des[1];
-    phi_d[1]    = pos_des[2];
-
-    // Current values from Odometry  //
-    
-    x_act[1]    = pos_act[0];
-    y_act[1]    = pos_act[1];
-
-    vx_act[1]   = vel_act[0];
-    vy_act[1]   = vel_act[1];
-    dphi_act[1] = vel_act[2];
-
-    x_quat   = quat_act[0];
-    y_quat   = quat_act[1];
-    z_quat   = quat_act[2];
-    w_quat   = quat_act[3];
-    
-     
-    
-    /** Calculation of angles **/
-    phi_act[1]  = atan2(2.0 * (w_quat * z_quat + x_quat * y_quat),
-                        1.0-2.0 * (y_quat*y_quat + z_quat * z_quat));
-
-    angle = atan2(y_d[1]-y_act[1],x_d[1]-x_act[1]);
-
-
-    /* PID control */
- 
-    del_s[1] = sqrt( (x_d[1] - x_act[1]) * (x_d[1] - x_act[1]) + (y_d[1] - y_act[1]) * (y_d[1] - y_act[1]));
-   
-    vel_linear = kp_s * del_s[1] + kd_s * ( del_s[1] - del_s[0] ) / dt + ki_s * Is;
- 
-    u_p =  kp_phi * (phi_d[1]-phi_act[1])
-          +kd_phi * ((phi_d[1] - phi_d[0])-(phi_act[1] - phi_act[0]))/dt
-          +ki_phi * Iphi;
-
-  
-	vel_linear = sqrt(linear_x_d**2+linear_y_d**2);
+	vel_linear = sqrt(linear_x_d*linear_x_d+linear_y_d*linear_y_d);
 
 	if(vel_linear>v_lim)
     {
-		vel_angular = v_lim * vel_angular / vel_linear;
-        vel_linear = v_lim;
-
+		u_p = v_lim * angular_z_d / vel_linear;
+		u_x = v_lim * linear_x_d/ vel_linear;
+		u_y = v_lim * linear_y_d/ vel_linear;
     }
-
-
-    u_x = vel_linear * cosf(angle-phi_act[1]);
-    u_y = vel_linear * sinf(angle-phi_act[1]);
-    
+	else
+	{
+		u_p = angular_z_d;
+		u_x = linear_x_d;
+		u_y = linear_y_d;
+	}
 
     ROS_INFO("u_x : %lf u_y : %lf u_phi : %lf",u_x,u_y,u_p);
 
@@ -225,57 +129,15 @@ int main(int argc, char **argv)
         u_p = 0;
     }
 
-    // Forward Kinematics //
-    u_x = wheel_radius / 4.0 * (wheel_speed_lf + wheel_speed_rf + wheel_speed_lb + wheel_speed_rb);
-
-    u_y = wheel_radius / 4.0 * (-wheel_speed_lf + wheel_speed_rf + wheel_speed_lb - wheel_speed_rb);
-
-    u_p = wheel_radius / ( 4.0 * l) * (-wheel_speed_lf + wheel_speed_rf -wheel_speed_lb + wheel_speed_rb);
-
-
-    cmd_vel.linear.x  = u_x;
-    cmd_vel.linear.y  = u_y;
-    cmd_vel.angular.z = u_p;
-
     input_msg.data.clear();
     input_msg.data.push_back(w1 * gear_ratio);
     input_msg.data.push_back(-w2 * gear_ratio);
     input_msg.data.push_back(w3 * gear_ratio);
     input_msg.data.push_back(-w4 * gear_ratio);
-    //input_msg.omega1 = w1 * gear_ratio;
-    //input_msg.omega2 = -w2 * gear_ratio;
-    //input_msg.omega3 = w3 * gear_ratio;
-    //input_msg.omega4 = -w4 * gear_ratio;
-/*
-    input_msg.vel1 = w1;
-    input_msg.vel2 = w2;
-    input_msg.vel3 = w3;
-    input_msg.vel4 = w4;
-*/
-    ctrl_pub.publish(cmd_vel);
+
     publ_input.publish(input_msg);
     ros::spinOnce();
     loop_rate.sleep();
-
-        // Last values from reference  phi --> rad//
-    x_d[0]      = x_d[1];
-    y_d[0]      = y_d[1];
-    del_s[0]    = del_s[1];
-    phi_d[0]    = phi_d[1];
-
-    // Last values from Odometry  //
-    
-    x_act[0]    = x_act[1];
-    y_act[0]    = y_act[1];
-    phi_act[0]  = phi_act[1];
-  
-    vx_act[0]   = vx_act[1];
-    vy_act[0]   = vy_act[1];
-    dphi_act[0] = dphi_act[1];
-
-    // Accumulated error update //
-    Is = Is + (del_s[1]-del_s[0])*dt;
-    Iphi = Iphi + (phi_d[1] - phi_act[1])*dt;
 
   }
 

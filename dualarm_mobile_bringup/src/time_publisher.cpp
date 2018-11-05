@@ -17,6 +17,9 @@ int main(int argc, char **argv)
 	{
 		msg.clock = ros::Time::now();
 		time_pub.publish(msg);
+
+		ros::spin();
+		loop_rate.sleep();
 	}
 
 	return 0;
