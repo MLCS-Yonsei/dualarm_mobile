@@ -58,6 +58,9 @@ target_link_libraries(vehicle_controller ${catkin_LIBRARIES})
 add_executable(odom_publisher src/odometry.cpp)
 target_link_libraries(odom_publisher ${catkin_LIBRARIES})
 
+add_executable(scan_publisher src/scan_publisher.cpp)
+target_link_libraries(scan_publisher ${catkin_LIBRARIES})
+
 add_executable(tf_broadcaster src/tf_broadcaster.cpp)
 target_link_libraries(tf_broadcaster ${catkin_LIBRARIES})
 

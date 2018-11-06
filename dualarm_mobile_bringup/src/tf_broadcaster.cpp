@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 
   while(n.ok())
   {
-    ros::Time current_time = ros::Time(0);
+    ros::Time current_time = ros::Time::now();
     broadcaster.sendTransform(
       tf::StampedTransform(
         tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.0)),

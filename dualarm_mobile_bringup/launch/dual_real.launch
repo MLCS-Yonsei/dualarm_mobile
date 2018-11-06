@@ -27,6 +27,7 @@
     <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odometry"/>
     <node pkg="dualarm_mobile_bringup" type="tf_broadcaster" name="tf"/>
     <node pkg="dualarm_mobile_bringup" type="time_publisher" name="time"/>
+    <node pkg="dualarm_mobile_bringup" type="scan_publisher" name="scan"/>
   </group>
     
 </launch>
