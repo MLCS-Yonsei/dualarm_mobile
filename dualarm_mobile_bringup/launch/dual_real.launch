@@ -18,16 +18,22 @@
   
   <!-- State_publisher -->
   <!-- <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="50.0" />
+    <param name="publish_frequency" type="double" value="100.0" />
   </node> -->
-  
+
+  <!-- Joint state publisher -->
+  <!-- <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+    <param name="publish_frequency" type="double" value="100.0" />
+  </node>
+   -->
   <!-- Controller -->
   <group ns="controller_group">
     <node pkg="dualarm_mobile_bringup" type="vehicle_controller" name="control"/>
-    <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odometry"/>
-    <node pkg="dualarm_mobile_bringup" type="tf_broadcaster" name="tf"/>
-    <node pkg="dualarm_mobile_bringup" type="scan_publisher" name="scan"/>
+    <!-- <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odometry"/> -->
+    <!-- <node pkg="dualarm_mobile_bringup" type="tf_broadcaster" name="tf"/> -->
+    <!-- <node pkg="dualarm_mobile_bringup" type="scan_publisher" name="scan"/> -->
     <!-- <node pkg="dualarm_mobile_bringup" type="time_publisher" name="time"/> -->
+    <node pkg="dualarm_mobile_bringup" type="bringup_publisher" name="bringup"/>
   </group>
     
 </launch>

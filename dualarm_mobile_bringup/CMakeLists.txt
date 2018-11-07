@@ -3,20 +3,12 @@ project(dualarm_mobile_bringup)
 
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
-  #message_generation
   nav_msgs
   roscpp
   std_msgs
   nodelet
   tf
-  #mobile_control
-  #epos_tutorial
 )
-
-  #add_message_files(
-    #Files
-    #commendMsg.msg
-  #)
 
   generate_messages(
     DEPENDENCIES
@@ -55,14 +47,18 @@ target_link_libraries(vehicle_controller ${catkin_LIBRARIES})
 #add_dependencies(vehicle_controller ${catkin_EXPORTED_TARGETS})
 # add_dependencies(vehicle_controller ${catkin_EXPORTED_TARGETS})
 
-add_executable(odom_publisher src/odometry.cpp)
-target_link_libraries(odom_publisher ${catkin_LIBRARIES})
+#add_executable(odom_publisher src/odometry.cpp)
+#target_link_libraries(odom_publisher ${catkin_LIBRARIES})
 
-add_executable(scan_publisher src/scan_publisher.cpp)
-target_link_libraries(scan_publisher ${catkin_LIBRARIES})
+#add_executable(scan_publisher src/scan_publisher.cpp)
+#target_link_libraries(scan_publisher ${catkin_LIBRARIES})
 
-add_executable(tf_broadcaster src/tf_broadcaster.cpp)
-target_link_libraries(tf_broadcaster ${catkin_LIBRARIES})
+#add_executable(tf_broadcaster src/tf_broadcaster.cpp)
+#target_link_libraries(tf_broadcaster ${catkin_LIBRARIES})
 
-add_executable(time_publisher src/time_publisher.cpp)
-target_link_libraries(time_publisher ${catkin_LIBRARIES})
+#add_executable(time_publisher src/time_publisher.cpp)
+#target_link_libraries(time_publisher ${catkin_LIBRARIES})
+
+add_executable(bringup_publisher src/bringup_publisher.cpp)
+target_link_libraries(bringup_publisher ${catkin_LIBRARIES})
+

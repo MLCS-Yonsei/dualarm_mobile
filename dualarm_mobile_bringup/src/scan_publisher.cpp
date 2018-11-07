@@ -22,8 +22,8 @@ int main(int argc, char **argv)
 	ros::init(argc, argv, "scan_publisher");
 	ros::NodeHandle nh;
 
-	ros::Subscriber measure_sub = nh.subscribe("/scan_ori", 1000, scanCallback);
-	ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("/scan", 1000);
+	ros::Subscriber measure_sub = nh.subscribe("/scan_ori", 100, scanCallback);
+	ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("/scan", 100);
 	// ros::Rate loop_rate(50);
 	while(ros::ok())
 	{
@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 		scan_revised.header.stamp = ros::Time::now();
 		scan_revised.header.frame_id = scan_ori.header.frame_id;
 		scan_revised.angle_min = scan_ori.angle_min;
+		scan_revised.angle_max = scan_ori.angle_max;
 		scan_revised.angle_increment = scan_ori.angle_increment;
 		scan_revised.scan_time = scan_ori.scan_time;
 		scan_revised.time_increment = scan_ori.time_increment;

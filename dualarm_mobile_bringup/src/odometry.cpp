@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 	tf::Transform odom_transform;
 	odom_transform.setIdentity();
 
-	ros::Rate loop_rate(50);
+	ros::Rate loop_rate(100);
 	
 	ros::Time last_odom_publish_time = ros::Time::now();
 

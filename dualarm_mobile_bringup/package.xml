@@ -20,10 +20,6 @@
   <build_depend>src</build_depend>
   <build_depend>worlds</build_depend>
   <build_depend>tf</build_depend>
-  <!--<build_depend>message_generation</build_depend>-->
-  <!--<build_depend>epos_tutorial</build_depend>-->
-  <!--<build_depend>mobile_control</build_depend>-->
-
 
   <run_depend>geometry_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
@@ -33,10 +29,6 @@
   <run_depend>src</run_depend>
   <run_depend>worlds</run_depend>
   <run_depend>rospy</run_depend>
-  <!--<run_depend>message_runtime</run_depend>-->
-
-  <!--<run_depend>epos_tutorial</run_depend>-->
-  <!--<run_depend>mobile_control</run_depend>-->
   
   <export>
 
