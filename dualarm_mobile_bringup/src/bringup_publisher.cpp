@@ -7,21 +7,20 @@
 #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
-#include <tf/transform_broadcaster.h>
 #include <std_msgs/Int32MultiArray.h>
 #include <std_msgs/MultiArrayLayout.h>
 #include <std_msgs/MultiArrayDimension.h>
 #include <std_msgs/Time.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
-#include "ros/ros.h"
+
 #define PI 3.14159265358979323846
 
 //Motor
-int64_t w0 = 0;
-int64_t w1 = 0;
-int64_t w2 = 0;
-int64_t w3 = 0;
+int64_t motor_vel_0 = 0;
+int64_t motor_vel_1 = 0;
+int64_t motor_vel_2 = 0;
+int64_t motor_vel_3 = 0;
 //LiDAR
 sensor_msgs::LaserScan scan_ori;
 
@@ -41,10 +40,10 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 
 void measureCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
 {
-	w0 = msg->data[0];
-	w1 = msg->data[1];
-	w2 = msg->data[2];
-	w3 = msg->data[3];
+	motor_rpm_0 = msg->data[0];
+	motor_rpm_1 = msg->data[1];
+	motor_rpm_2 = msg->data[2];
+	motor_rpm_3 = msg->data[3];
 }
 
 
@@ -148,19 +147,14 @@ int main(int argc, char **argv)
 		ros::Time currentTime = ros::Time::now();
 
 		nav_msgs::Odometry odom;
-		sensor_msgs::LaserScan scan_revised;
-		std_msgs::Time msg;
+		sensor_msgs::LaserScan scan;
+		std_msgs::Time rostime;
 		tf::TransformBroadcaster broadcaster;
 
-		wheel_speed_lf = (double) w0 * rpm_to_radps;
-		wheel_speed_rf = (double) w1 * rpm_to_radps;
-		wheel_speed_lb = (double) w2 * rpm_to_radps;
-		wheel_speed_rb = (double) w3 * rpm_to_radps;
-
-		wheel_speed_lf = (double) w0 * rpm_to_radps;
-		wheel_speed_rf = (double) w1 * rpm_to_radps;
-		wheel_speed_lb = (double) w2 * rpm_to_radps;
-		wheel_speed_rb = (double) w3 * rpm_to_radps;
+		wheel_speed_lf = (double) motor_rpm_0 * rpm_to_radps / gear_ratio;
+		wheel_speed_rf = (double) motor_rpm_1 * rpm_to_radps / gear_ratio;
+		wheel_speed_lb = (double) motor_rpm_2 * rpm_to_radps / gear_ratio;
+		wheel_speed_rb = (double) motor_rpm_3 * rpm_to_radps / gear_ratio;
 
 		linear_vel_x =
 			wheel_radius/4.0*(wheel_speed_lf+wheel_speed_rf+wheel_speed_lb+wheel_speed_rb);
@@ -181,20 +175,20 @@ int main(int argc, char **argv)
 
 		tf::poseTFToMsg(odom_transform, odom.pose.pose);
 
-		scan_revised.header.stamp = currentTime;
-		scan_revised.header.frame_id = scan_ori.header.frame_id;
-		scan_revised.angle_min = scan_ori.angle_min;
-		scan_revised.angle_max = scan_ori.angle_max;
-		scan_revised.angle_increment = scan_ori.angle_increment;
-		scan_revised.scan_time = scan_ori.scan_time;
-		scan_revised.time_increment = scan_ori.time_increment;
-		scan_revised.range_min = scan_ori.range_min;
-		scan_revised.range_max = scan_ori.range_max;
-		scan_revised.intensities = scan_ori.intensities;
-		scan_revised.ranges = scan_ori.ranges;
+		scan.header.stamp = currentTime;
+		scan.header.frame_id = scan_ori.header.frame_id;
+		scan.angle_min = scan_ori.angle_min;
+		scan.angle_max = scan_ori.angle_max;
+		scan.angle_increment = scan_ori.angle_increment;
+		scan.scan_time = scan_ori.scan_time;
+		scan.time_increment = scan_ori.time_increment;
+		scan.range_min = scan_ori.range_min;
+		scan.range_max = scan_ori.range_max;
+		scan.intensities = scan_ori.intensities;
+		scan.ranges = scan_ori.ranges;
 
-		msg.data.sec = currentTime.sec;
-		msg.data.nsec = currentTime.nsec;
+		rostime.data.sec = currentTime.sec;
+		rostime.data.nsec = currentTime.nsec;
 
 		odom.twist.twist.angular.z = angular_vel_z;
 		odom.twist.twist.linear.x  = linear_vel_x;
@@ -239,9 +233,9 @@ int main(int argc, char **argv)
 			odom.twist.covariance[35] = 100.0;
 		}
 
-		scan_pub.publish(scan_revised);
+		scan_pub.publish(scan);
 		odom_pub.publish(odom);
-		time_pub.publish(msg);
+		time_pub.publish(rostime);
 		
 		broadcaster.sendTransform(
 		tf::StampedTransform(
