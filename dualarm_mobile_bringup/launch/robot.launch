@@ -2,7 +2,7 @@
 <launch>
 
   <!-- urdf description -->
-  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find dualarm_mobile_description)/urdf/real_robot.urdf.xacro"/>
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find dualarm_mobile_description)/urdf/robot.urdf.xacro"/>
   <param name="robot_description" command="$(arg urdf_file)"/>
 
   <!-- EKF odom -->
