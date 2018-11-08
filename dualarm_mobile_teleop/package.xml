@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>dualarmbot_mobile_teleop</name>
+  <name>dualarm_mobile_teleop</name>
   <version>0.0.1</version>
   <description>Provides teleoperation using keyboard</description>
   <license>GPLv3</license>
@@ -11,13 +11,15 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>geometry_msgs</build_depend>
+  <build_depend>joy</build_depend>
 
+  <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>geometry_msgs</run_depend>
+  <run_depend>joy</run_depend>
+  <run_depend>dualarm_mobile_bringup</run_depend>
 
-  <export>
-
-  </export>
 </package>
