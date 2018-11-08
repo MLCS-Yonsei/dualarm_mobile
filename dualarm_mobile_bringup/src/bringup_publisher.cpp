@@ -17,10 +17,11 @@
 #define PI 3.14159265358979323846
 
 //Motor
-int64_t motor_vel_0 = 0;
-int64_t motor_vel_1 = 0;
-int64_t motor_vel_2 = 0;
-int64_t motor_vel_3 = 0;
+int64_t motor_rpm_0 = 0;
+int64_t motor_rpm_1 = 0;
+int64_t motor_rpm_2 = 0;
+int64_t motor_rpm_3 = 0;
+
 //LiDAR
 sensor_msgs::LaserScan scan_ori;
 
@@ -106,9 +107,6 @@ int main(int argc, char **argv)
 	//LiDAR
 	ros::Subscriber scan_sub = nh.subscribe("/scan_ori", 100, scanCallback);
 	ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("/scan", 100);
-	//Time
-	ros::Publisher time_pub = nh.advertise<std_msgs::Time>("/rostime", 1000);
-
 	
 	tf::Transform odom_transform;
 	odom_transform.setIdentity();
@@ -148,7 +146,6 @@ int main(int argc, char **argv)
 
 		nav_msgs::Odometry odom;
 		sensor_msgs::LaserScan scan;
-		std_msgs::Time rostime;
 		tf::TransformBroadcaster broadcaster;
 
 		wheel_speed_lf = (double) motor_rpm_0 * rpm_to_radps / gear_ratio;
@@ -186,9 +183,6 @@ int main(int argc, char **argv)
 		scan.range_max = scan_ori.range_max;
 		scan.intensities = scan_ori.intensities;
 		scan.ranges = scan_ori.ranges;
-
-		rostime.data.sec = currentTime.sec;
-		rostime.data.nsec = currentTime.nsec;
 
 		odom.twist.twist.angular.z = angular_vel_z;
 		odom.twist.twist.linear.x  = linear_vel_x;
@@ -235,7 +229,6 @@ int main(int argc, char **argv)
 
 		scan_pub.publish(scan);
 		odom_pub.publish(odom);
-		time_pub.publish(rostime);
 		
 		broadcaster.sendTransform(
 		tf::StampedTransform(

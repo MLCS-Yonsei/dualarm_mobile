@@ -1,7 +1,5 @@
 #include <math.h>
 #include "ros/ros.h"
-//#include "bringup_dual/commendMsg.h"
-//#include "mobile_control/motorsMsg.h"
 #include "nav_msgs/Odometry.h"
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Pose2D.h>

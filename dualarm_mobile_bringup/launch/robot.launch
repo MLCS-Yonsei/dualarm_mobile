@@ -7,33 +7,18 @@
 
   <!-- EKF odom -->
   <!-- <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf">
-    <param name="output_frame" value="odom_combined"/>
+    <param name="output_frame" value="odom"/>
     <param name="base_footprint_frame" value="base_footprint"/>
-    <param name="freq" value="30.0"/>
+    <param name="freq" value="100.0"/>
     <param name="sensor_timeout" value="1.0"/>  
     <param name="odom_used" value="true"/>
     <param name="imu_used" value="true"/>
     <param name="vo_used" value="false"/>
-    <remap from="imu_data" to="/imu" />     -->
-  
-  <!-- State_publisher -->
-  <!-- <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="100.0" />
+    <remap from="imu_data" to="imu" />
   </node> -->
-
-  <!-- Joint state publisher -->
-  <!-- <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
-    <param name="publish_frequency" type="double" value="100.0" />
-  </node>
-   -->
+  
   <!-- Controller -->
-  <group ns="controller_group">
-    <node pkg="dualarm_mobile_bringup" type="vehicle_controller" name="control"/>
-    <!-- <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odometry"/> -->
-    <!-- <node pkg="dualarm_mobile_bringup" type="tf_broadcaster" name="tf"/> -->
-    <!-- <node pkg="dualarm_mobile_bringup" type="scan_publisher" name="scan"/> -->
-    <!-- <node pkg="dualarm_mobile_bringup" type="time_publisher" name="time"/> -->
-    <node pkg="dualarm_mobile_bringup" type="bringup_publisher" name="bringup"/>
-  </group>
+  <node pkg="dualarm_mobile_bringup" type="vehicle_controller" name="control"/>
+  <node pkg="dualarm_mobile_bringup" type="bringup_publisher" name="bringup"/>
     
 </launch>

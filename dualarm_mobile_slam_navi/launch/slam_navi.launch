@@ -6,16 +6,13 @@
   <!-- Map server -->
   <!-- <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/> -->
 
-  <!-- cmd_publisher -->
-  <node pkg="dualarm_mobile_slam_navi" type="cmd_publisher.py" name="cmd_publisher"/>
-
   <!-- G-mapping -->
   <node pkg="gmapping" type="slam_gmapping" name="dual_gmapping">
 		<param name="base_frame" value="base_footprint"/>
 		<param name="map_frame" value="map"/>
 		<param name="odom_frame" value="odom"/>
-		<param name="map_update_interval" value="5.0"/>
-		<param name="maxUrange" value="4.0"/>
+		<param name="map_update_interval" value="1.0"/>
+		<param name="maxUrange" value="10.0"/>
 		<param name="minimumScore" value="100"/>
 		<param name="linearUpdate" value="0.2"/>
 		<param name="angularUpdate" value="0.2"/>
