@@ -78,7 +78,7 @@ int main(int argc, char **argv)
     
     std_msgs::Int32MultiArray input_msg;
 
-    norm_desired = abs(linear_x_d) + abs(linear_y_d) + abs(l * angular_z_d)
+    norm_desired = abs(linear_x_d) + abs(linear_y_d) + abs(l * angular_z_d);
 
     // vel_linear = sqrt(linear_x_d*linear_x_d+linear_y_d*linear_y_d);
 
@@ -113,10 +113,10 @@ int main(int argc, char **argv)
 
     if(u_x * u_x + u_y * u_y + u_p * u_p < 0.01*0.01)
     {
-      w1 = 0;
-      w2 = 0;
-      w3 = 0;
-      w4 = 0;
+      rpm_fl = 0;
+      rpm_fr = 0;
+      rpm_bl = 0;
+      rpm_br = 0;
 
       u_x = 0;
       u_y = 0;
