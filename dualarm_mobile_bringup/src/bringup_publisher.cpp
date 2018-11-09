@@ -17,10 +17,10 @@
 #define PI 3.14159265358979323846
 
 //Motor
-int64_t motor_rpm_0 = 0;
-int64_t motor_rpm_1 = 0;
-int64_t motor_rpm_2 = 0;
-int64_t motor_rpm_3 = 0;
+int64_t motor_rpm_fl = 0;
+int64_t motor_rpm_fr = 0;
+int64_t motor_rpm_bl = 0;
+int64_t motor_rpm_br = 0;
 
 //LiDAR
 sensor_msgs::LaserScan scan_ori;
@@ -41,10 +41,10 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 
 void measureCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
 {
-	motor_rpm_0 = msg->data[0];
-	motor_rpm_1 = msg->data[1];
-	motor_rpm_2 = msg->data[2];
-	motor_rpm_3 = msg->data[3];
+	motor_rpm_fl = msg->data[0];
+	motor_rpm_fr = msg->data[1] * (-1);
+	motor_rpm_bl = msg->data[2];
+	motor_rpm_br = msg->data[3] * (-1);
 }
 
 
@@ -148,10 +148,10 @@ int main(int argc, char **argv)
 		sensor_msgs::LaserScan scan;
 		tf::TransformBroadcaster broadcaster;
 
-		wheel_speed_lf = (double) motor_rpm_0 * rpm_to_radps / gear_ratio;
-		wheel_speed_rf = (double) motor_rpm_1 * rpm_to_radps / gear_ratio;
-		wheel_speed_lb = (double) motor_rpm_2 * rpm_to_radps / gear_ratio;
-		wheel_speed_rb = (double) motor_rpm_3 * rpm_to_radps / gear_ratio;
+		wheel_speed_lf = (double) motor_rpm_fl * rpm_to_radps / gear_ratio;
+		wheel_speed_rf = (double) motor_rpm_fr * rpm_to_radps / gear_ratio;
+		wheel_speed_lb = (double) motor_rpm_bl * rpm_to_radps / gear_ratio;
+		wheel_speed_rb = (double) motor_rpm_br * rpm_to_radps / gear_ratio;
 
 		linear_vel_x =
 			wheel_radius/4.0*(wheel_speed_lf+wheel_speed_rf+wheel_speed_lb+wheel_speed_rb);
