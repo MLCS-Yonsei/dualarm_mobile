@@ -16,8 +16,8 @@ catkin_package(
 
 ## Build ##
 
-# add_executable(dualarm_mobile_teleop_joy src/dualarm_bobile_teleop_joy.cpp)
-# target_link_libraries(dualarm_mobile_teleop_joy ${catkin_LIBRARIES})
+add_executable(dualarm_mobile_teleop_joy src/dualarm_bobile_teleop_joy.cpp)
+target_link_libraries(dualarm_mobile_teleop_joy ${catkin_LIBRARIES})
 
 
 ## Install ##
