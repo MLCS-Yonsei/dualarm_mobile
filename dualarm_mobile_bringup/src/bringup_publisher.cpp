@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 	transform_broadcaster.reset(new tf::TransformBroadcaster());
 
 	//Odom
-	ros::Subscriber measure_sub = nh.subscribe("/measure", 100, measureCallback);
+	ros::Subscriber measure_sub = nh.subscribe("/input_msg", 100, measureCallback);
 	ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 100);
 	//LiDAR
 	ros::Subscriber scan_sub = nh.subscribe("/scan_ori", 100, scanCallback);
