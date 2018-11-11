@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>turtlebot3_teleop</name>
+  <name>dualarm_mobile</name>
   <version>1.1.0</version>
   <description>
     Provides teleoperation using keyboard for TurtleBot3.
