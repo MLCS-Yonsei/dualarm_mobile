@@ -6,6 +6,7 @@
 #include <boost/thread.hpp>
 #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Transform.h>
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Int32MultiArray.h>
 #include <std_msgs/MultiArrayLayout.h>
@@ -13,6 +14,7 @@
 #include <std_msgs/Time.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
+
 
 #define PI 3.14159265358979323846
 
@@ -23,6 +25,10 @@ double angular_vel_z;
 
 //LiDAR
 sensor_msgs::LaserScan scan_ori;
+
+//Odometry
+tf::Transform odom_transform;
+
 
 void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 {
@@ -38,53 +44,59 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 	scan_ori.ranges = scan->ranges;
 }
 
-void cmdCallback(const geometry_msgs::Twist::ConstPtr& msg)
+//void cmdCallback(const geometry_msgs::Twist::ConstPtr& msg)
+//{
+	//linear_vel_x  = msg->linear.x;
+	//linear_vel_y  = msg->linear.y;
+	//angular_vel_z = msg->angular.z;
+//}
+
+void odomCallback(const nav_msgs::Odometry::ConstPtr& odom_msg)
 {
-	linear_vel_x  = msg->linear.x;
-	linear_vel_y  = msg->linear.y;
-	angular_vel_z = msg->angular.z;
+	geometry_msgs::Quaternion q;
+	tf::quaternionMsgToTF(odom_msg->pose.pose.orientation, q);
+	odom_transform = tf::Transform(q, Vector3(odom->pose.pose.position.x, odom->pose.pose.position.y, 0));
 }
 
+//tf::Transform getTransformForMotion(
+	//double linear_vel_x,
+	//double linear_vel_y,
+	//double angular_vel_z,
+	//double timeSeconds
+//)
+//{
 
-tf::Transform getTransformForMotion(
-	double linear_vel_x,
-	double linear_vel_y,
-	double angular_vel_z,
-	double timeSeconds
-)
-{
+	//tf::Transform tmp;
+	//tmp.setIdentity();
 
-	tf::Transform tmp;
-	tmp.setIdentity();
+	//if (std::abs(angular_vel_z) < 0.0001){
+		//tmp.setOrigin(
+			//tf::Vector3(
+				//static_cast<double>(linear_vel_x*timeSeconds),
+				//static_cast<double>(linear_vel_y*timeSeconds),
+				//0.0
+			//)
+		//);
+	//}else{
+		//double distChange_x = linear_vel_x * timeSeconds;
+		//double distChange_y = linear_vel_y * timeSeconds;
+		//double angleChange = angular_vel_z * timeSeconds;
 
-	if (std::abs(angular_vel_z) < 0.0001){
-		tmp.setOrigin(
-			tf::Vector3(
-				static_cast<double>(linear_vel_x*timeSeconds),
-				static_cast<double>(linear_vel_y*timeSeconds),
-				0.0
-			)
-		);
-	}else{
-		double distChange_x = linear_vel_x * timeSeconds;
-		double distChange_y = linear_vel_y * timeSeconds;
-		double angleChange = angular_vel_z * timeSeconds;
+		//double arcRadius_x = distChange_x / angleChange;
+		//double arcRadius_y = distChange_y / angleChange;
 
-		double arcRadius_x = distChange_x / angleChange;
-		double arcRadius_y = distChange_y / angleChange;
+		//tmp.setOrigin(
+			//tf::Vector3(
+				//std::sin(angleChange) * arcRadius_x + std::cos(angleChange) * arcRadius_y -arcRadius_y,
+				//std::sin(angleChange) * arcRadius_y + std::cos(angleChange) * arcRadius_x -arcRadius_x,
+				//0.0
+			//)
+		//);
+		//tmp.setRotation(tf::createQuaternionFromYaw(angleChange));
+	//}
+	//return tmp;
 
-		tmp.setOrigin(
-			tf::Vector3(
-				std::sin(angleChange) * arcRadius_x + std::cos(angleChange) * arcRadius_y -arcRadius_y,
-				std::sin(angleChange) * arcRadius_y + std::cos(angleChange) * arcRadius_x -arcRadius_x,
-				0.0
-			)
-		);
-		tmp.setRotation(tf::createQuaternionFromYaw(angleChange));
-	}
-	return tmp;
-
-}
+//}
 
 int main(int argc, char **argv)
 {
@@ -100,14 +112,15 @@ int main(int argc, char **argv)
 	transform_broadcaster.reset(new tf::TransformBroadcaster());
 
 	//Odom
-	ros::Subscriber cmd_sub = nh.subscribe("/cmd_vel", 100, cmdCallback);
-	ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 100);
+	//ros::Subscriber cmd_sub = nh.subscribe("/cmd_vel", 100, cmdCallback);
+	ros::Subscriber odom_sub = nh.subscribe("/odom", 100, odomCallback);
+	//ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 100);
 	//LiDAR
 	ros::Subscriber scan_sub = nh.subscribe("/scan_ori", 100, scanCallback);
 	ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("/scan", 100);
 	
-	tf::Transform odom_transform;
-	odom_transform.setIdentity();
+	//tf::Transform odom_transform;
+	//odom_transform.setIdentity();
 
 	ros::Rate loop_rate(100);
 	
@@ -122,19 +135,19 @@ int main(int argc, char **argv)
 	{
 		ros::Time currentTime = ros::Time::now();
 
-		nav_msgs::Odometry odom;
+		//nav_msgs::Odometry odom;
 		sensor_msgs::LaserScan scan;
 		tf::TransformBroadcaster broadcaster;
 
-		double step_time = 0;
-		step_time = currentTime.toSec() - last_odom_publish_time.toSec();
-		last_odom_publish_time = currentTime;
+		//double step_time = 0;
+		//step_time = currentTime.toSec() - last_odom_publish_time.toSec();
+		//last_odom_publish_time = currentTime;
 		
-		odom_transform =
-			odom_transform*getTransformForMotion(
-				linear_vel_x, linear_vel_y, angular_vel_z, step_time);
+		//odom_transform =
+			//odom_transform*getTransformForMotion(
+				//linear_vel_x, linear_vel_y, angular_vel_z, step_time);
 
-		tf::poseTFToMsg(odom_transform, odom.pose.pose);
+		//tf::poseTFToMsg(odom_transform, odom.pose.pose);
 
 		scan.header.stamp = currentTime;
 		scan.header.frame_id = scan_ori.header.frame_id;
@@ -148,13 +161,13 @@ int main(int argc, char **argv)
 		scan.intensities = scan_ori.intensities;
 		scan.ranges = scan_ori.ranges;
 
-		odom.twist.twist.linear.x  = linear_vel_x;
-		odom.twist.twist.linear.y  = linear_vel_y;
-		odom.twist.twist.angular.z = angular_vel_z;
+		//odom.twist.twist.linear.x  = linear_vel_x;
+		//odom.twist.twist.linear.y  = linear_vel_y;
+		//odom.twist.twist.angular.z = angular_vel_z;
 
-		odom.header.stamp = currentTime;
-		odom.header.frame_id = "odom";
-		odom.child_frame_id = "base_footprint";
+		//odom.header.stamp = currentTime;
+		//odom.header.frame_id = "odom";
+		//odom.child_frame_id = "base_footprint";
 
 		if (transform_broadcaster.get()){
 			transform_broadcaster->sendTransform(
@@ -167,32 +180,32 @@ int main(int argc, char **argv)
 			);
 		}
 		
-		odom.pose.covariance[0] = 0.001;
-		odom.pose.covariance[7] = 0.001;
-		odom.pose.covariance[14] = 1000000000000.0;
-		odom.pose.covariance[21] = 1000000000000.0;
-		odom.pose.covariance[28] = 1000000000000.0;
+		//odom.pose.covariance[0] = 0.001;
+		//odom.pose.covariance[7] = 0.001;
+		//odom.pose.covariance[14] = 1000000000000.0;
+		//odom.pose.covariance[21] = 1000000000000.0;
+		//odom.pose.covariance[28] = 1000000000000.0;
 		
-		if (std::abs(angular_vel_z) < 0.0001) {
-			odom.pose.covariance[35] = 0.01;
-		}else{
-			odom.pose.covariance[35] = 100.0;
-		}
+		//if (std::abs(angular_vel_z) < 0.0001) {
+			//odom.pose.covariance[35] = 0.01;
+		//}else{
+			//odom.pose.covariance[35] = 100.0;
+		//}
 
-		odom.twist.covariance[0] = 0.001;
-		odom.twist.covariance[7] = 0.001;
-		odom.twist.covariance[14] = 0.001;
-		odom.twist.covariance[21] = 1000000000000.0;
-		odom.twist.covariance[28] = 1000000000000.0;
+		//odom.twist.covariance[0] = 0.001;
+		//odom.twist.covariance[7] = 0.001;
+		//odom.twist.covariance[14] = 0.001;
+		//odom.twist.covariance[21] = 1000000000000.0;
+		//odom.twist.covariance[28] = 1000000000000.0;
 		
-		if (std::abs(angular_vel_z) < 0.0001) {
-			odom.twist.covariance[35] = 0.01;
-		}else{
-			odom.twist.covariance[35] = 100.0;
-		}
+		//if (std::abs(angular_vel_z) < 0.0001) {
+			//odom.twist.covariance[35] = 0.01;
+		//}else{
+			//odom.twist.covariance[35] = 100.0;
+		//}
 
 		scan_pub.publish(scan);
-		odom_pub.publish(odom);
+		//odom_pub.publish(odom);
 		
 		broadcaster.sendTransform(
 		tf::StampedTransform(
