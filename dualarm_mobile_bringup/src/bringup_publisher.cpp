@@ -6,11 +6,10 @@
 #include <boost/thread.hpp>
 #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/Twist.h>
-#include <geometry_msgs/Transform.h>
 #include <nav_msgs/Odometry.h>
-#include <std_msgs/Int32MultiArray.h>
-#include <std_msgs/MultiArrayLayout.h>
-#include <std_msgs/MultiArrayDimension.h>
+//#include <std_msgs/Int32MultiArray.h>
+//#include <std_msgs/MultiArrayLayout.h>
+//#include <std_msgs/MultiArrayDimension.h>
 #include <std_msgs/Time.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
@@ -53,9 +52,9 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 
 void odomCallback(const nav_msgs::Odometry::ConstPtr& odom_msg)
 {
-	geometry_msgs::Quaternion q;
+	tf::Quaternion q;
 	tf::quaternionMsgToTF(odom_msg->pose.pose.orientation, q);
-	odom_transform = tf::Transform(q, Vector3(odom->pose.pose.position.x, odom->pose.pose.position.y, 0));
+	odom_transform = tf::Transform(q, tf::Vector3(odom_msg->pose.pose.position.x, odom_msg->pose.pose.position.y, 0));
 }
 
 //tf::Transform getTransformForMotion(
