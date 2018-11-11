@@ -17,10 +17,9 @@
 #define PI 3.14159265358979323846
 
 //Motor
-int64_t motor_rpm_fl = 0;
-int64_t motor_rpm_fr = 0;
-int64_t motor_rpm_bl = 0;
-int64_t motor_rpm_br = 0;
+double linear_vel_x;
+double linear_vel_y;
+double angular_vel_z;
 
 //LiDAR
 sensor_msgs::LaserScan scan_ori;
@@ -39,12 +38,11 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 	scan_ori.ranges = scan->ranges;
 }
 
-void measureCallback(const std_msgs::Int32MultiArray::ConstPtr& msg)
+void cmdCallback(const geometry_msgs::Twist::ConstPtr& msg)
 {
-	motor_rpm_fl = msg->data[0];
-	motor_rpm_fr = msg->data[1] * (-1);
-	motor_rpm_bl = msg->data[2];
-	motor_rpm_br = msg->data[3] * (-1);
+	linear_vel_x  = msg->linear.x;
+	linear_vel_y  = msg->linear.y;
+	angular_vel_z = msg->angular.z;
 }
 
 
@@ -102,7 +100,7 @@ int main(int argc, char **argv)
 	transform_broadcaster.reset(new tf::TransformBroadcaster());
 
 	//Odom
-	ros::Subscriber measure_sub = nh.subscribe("/input_msg", 100, measureCallback);
+	ros::Subscriber cmd_sub = nh.subscribe("/cmd_vel", 100, cmdCallback);
 	ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 100);
 	//LiDAR
 	ros::Subscriber scan_sub = nh.subscribe("/scan_ori", 100, scanCallback);
@@ -114,30 +112,10 @@ int main(int argc, char **argv)
 	ros::Rate loop_rate(100);
 	
 	ros::Time last_odom_publish_time = ros::Time::now();
-
-	//Gear ratio
-	int gear_ratio = 76;
-	//radps_to_rpm : rad/sec --> rpm
-	double radps_to_rpm = 60.0/2.0/PI;
-	//rpm_to_radps : rpm --> rad/sec
-	double rpm_to_radps = 2.0*PI/60;
-
-	//Wheel specification in meter
-	double wheel_diameter = 0.152;
-	double wheel_radius = wheel_diameter/2.0;
+	
 	double wheel_separation_a = 0.2355;
 	double wheel_separation_b = 0.281;
 	double l = wheel_separation_a+wheel_separation_b;
-
-	//Motor speed in rad/sec - initialization
-	double wheel_speed_lf = 0;
-	double wheel_speed_rf = 0;
-	double wheel_speed_lb = 0;
-	double wheel_speed_rb = 0;
-
-	double linear_vel_x = 0;
-	double linear_vel_y = 0;
-	double angular_vel_z = 0;
 
 
 	while(ros::ok())
@@ -147,20 +125,6 @@ int main(int argc, char **argv)
 		nav_msgs::Odometry odom;
 		sensor_msgs::LaserScan scan;
 		tf::TransformBroadcaster broadcaster;
-
-		wheel_speed_lf = (double) motor_rpm_fl * rpm_to_radps / gear_ratio;
-		wheel_speed_rf = (double) motor_rpm_fr * rpm_to_radps / gear_ratio;
-		wheel_speed_lb = (double) motor_rpm_bl * rpm_to_radps / gear_ratio;
-		wheel_speed_rb = (double) motor_rpm_br * rpm_to_radps / gear_ratio;
-
-		linear_vel_x =
-			wheel_radius/4.0*(wheel_speed_lf+wheel_speed_rf+wheel_speed_lb+wheel_speed_rb);
-
-		linear_vel_y =
-			wheel_radius/4.0*(-wheel_speed_lf+wheel_speed_rf+wheel_speed_lb-wheel_speed_rb);
-
-		angular_vel_z =
-			wheel_radius/(4.0*l)*(-wheel_speed_lf+wheel_speed_rf-wheel_speed_lb+wheel_speed_rb);
 
 		double step_time = 0;
 		step_time = currentTime.toSec() - last_odom_publish_time.toSec();
@@ -184,9 +148,9 @@ int main(int argc, char **argv)
 		scan.intensities = scan_ori.intensities;
 		scan.ranges = scan_ori.ranges;
 
-		odom.twist.twist.angular.z = angular_vel_z;
 		odom.twist.twist.linear.x  = linear_vel_x;
 		odom.twist.twist.linear.y  = linear_vel_y;
+		odom.twist.twist.angular.z = angular_vel_z;
 
 		odom.header.stamp = currentTime;
 		odom.header.frame_id = "odom";
