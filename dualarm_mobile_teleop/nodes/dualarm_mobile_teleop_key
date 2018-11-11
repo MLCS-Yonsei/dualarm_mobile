@@ -41,7 +41,7 @@ LIN_VEL_STEP_SIZE = 0.01
 ANG_VEL_STEP_SIZE = 0.1
 
 msg = """
-Control Your TurtleBot3!
+Control Your dualarm_mobile!
 ---------------------------
 Moving around:
         w
@@ -117,7 +117,7 @@ def checkAngularLimitVelocity(vel):
 if __name__=="__main__":
     settings = termios.tcgetattr(sys.stdin)
 
-    rospy.init_node('turtlebot3_teleop')
+    rospy.init_node('dualarm_mobile_teleop')
     pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)
 
     turtlebot3_model = rospy.get_param("model", "burger")
