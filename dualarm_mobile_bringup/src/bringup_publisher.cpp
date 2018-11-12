@@ -112,8 +112,7 @@ int main(int argc, char **argv)
 
 	//Odom
 	//ros::Subscriber cmd_sub = nh.subscribe("/cmd_vel", 100, cmdCallback);
-	ros::Subscriber odom_sub = nh.subscribe("/odom", 100, odomCallback);
-	//ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 100);
+	//ros::Subscriber odom_sub = nh.subscribe("/odom", 100, odomCallback);
 	//LiDAR
 	ros::Subscriber scan_sub = nh.subscribe("/scan_ori", 100, scanCallback);
 	ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("/scan", 100);
@@ -134,21 +133,47 @@ int main(int argc, char **argv)
 	{
 		ros::Time currentTime = ros::Time::now();
 
-		//nav_msgs::Odometry odom;
 		sensor_msgs::LaserScan scan;
 		tf::TransformBroadcaster broadcaster;
 
 		//double step_time = 0;
 		//step_time = currentTime.toSec() - last_odom_publish_time.toSec();
 		//last_odom_publish_time = currentTime;
-		
 		//odom_transform =
 			//odom_transform*getTransformForMotion(
 				//linear_vel_x, linear_vel_y, angular_vel_z, step_time);
 
+		//nav_msgs::Odometry odom;
 		//tf::poseTFToMsg(odom_transform, odom.pose.pose);
-
-		scan.header.stamp = currentTime;
+		//odom.twist.twist.linear.x  = linear_vel_x;
+		//odom.twist.twist.linear.y  = linear_vel_y;
+		//odom.twist.twist.angular.z = angular_vel_z;
+		//odom.header.stamp = currentTime;
+		//odom.header.frame_id = "odom";
+		//odom.child_frame_id = "base_footprint";
+		//odom.pose.covariance[0] = 0.001;
+		//odom.pose.covariance[7] = 0.001;
+		//odom.pose.covariance[14] = 1000000000000.0;
+		//odom.pose.covariance[21] = 1000000000000.0;
+		//odom.pose.covariance[28] = 1000000000000.0;
+		//if (std::abs(angular_vel_z) < 0.0001) {
+			//odom.pose.covariance[35] = 0.01;
+		//}else{
+			//odom.pose.covariance[35] = 100.0;
+		//}
+		//odom.twist.covariance[0] = 0.001;
+		//odom.twist.covariance[7] = 0.001;
+		//odom.twist.covariance[14] = 0.001;
+		//odom.twist.covariance[21] = 1000000000000.0;
+		//odom.twist.covariance[28] = 1000000000000.0;
+		//if (std::abs(angular_vel_z) < 0.0001) {
+			//odom.twist.covariance[35] = 0.01;
+		//}else{
+			//odom.twist.covariance[35] = 100.0;
+		//}
+		//odom_pub.publish(odom);
+        
+        scan.header.stamp = currentTime;
 		scan.header.frame_id = scan_ori.header.frame_id;
 		scan.angle_min = scan_ori.angle_min;
 		scan.angle_max = scan_ori.angle_max;
@@ -159,52 +184,19 @@ int main(int argc, char **argv)
 		scan.range_max = scan_ori.range_max;
 		scan.intensities = scan_ori.intensities;
 		scan.ranges = scan_ori.ranges;
-
-		//odom.twist.twist.linear.x  = linear_vel_x;
-		//odom.twist.twist.linear.y  = linear_vel_y;
-		//odom.twist.twist.angular.z = angular_vel_z;
-
-		//odom.header.stamp = currentTime;
-		//odom.header.frame_id = "odom";
-		//odom.child_frame_id = "base_footprint";
-
-		if (transform_broadcaster.get()){
-			transform_broadcaster->sendTransform(
-				tf::StampedTransform(
-					odom_transform,
-					currentTime,
-					"odom",
-					"base_footprint"
-				)
-			);
-		}
-		
-		//odom.pose.covariance[0] = 0.001;
-		//odom.pose.covariance[7] = 0.001;
-		//odom.pose.covariance[14] = 1000000000000.0;
-		//odom.pose.covariance[21] = 1000000000000.0;
-		//odom.pose.covariance[28] = 1000000000000.0;
-		
-		//if (std::abs(angular_vel_z) < 0.0001) {
-			//odom.pose.covariance[35] = 0.01;
-		//}else{
-			//odom.pose.covariance[35] = 100.0;
-		//}
-
-		//odom.twist.covariance[0] = 0.001;
-		//odom.twist.covariance[7] = 0.001;
-		//odom.twist.covariance[14] = 0.001;
-		//odom.twist.covariance[21] = 1000000000000.0;
-		//odom.twist.covariance[28] = 1000000000000.0;
-		
-		//if (std::abs(angular_vel_z) < 0.0001) {
-			//odom.twist.covariance[35] = 0.01;
-		//}else{
-			//odom.twist.covariance[35] = 100.0;
-		//}
-
 		scan_pub.publish(scan);
-		//odom_pub.publish(odom);
+
+		//if (transform_broadcaster.get()){
+			//transform_broadcaster->sendTransform(
+				//tf::StampedTransform(
+					//odom_transform,
+					//currentTime,
+					//"odom",
+					//"base_footprint"
+				//)
+			//);
+		//}
+
 		
 		broadcaster.sendTransform(
 		tf::StampedTransform(
