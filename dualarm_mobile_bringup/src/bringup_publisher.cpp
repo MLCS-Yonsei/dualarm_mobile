@@ -4,7 +4,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
-#include <sensor_msgs/LaserScan.h>
+// #include <sensor_msgs/LaserScan.h>
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
 //#include <std_msgs/Int32MultiArray.h>
@@ -14,34 +14,34 @@
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_datatypes.h>
 
-
+  
 #define PI 3.14159265358979323846
 
 //Motor
-double linear_vel_x;
-double linear_vel_y;
-double angular_vel_z;
+// double linear_vel_x;
+// double linear_vel_y;
+// double angular_vel_z;
 
 //LiDAR
-sensor_msgs::LaserScan scan_ori;
+// sensor_msgs::LaserScan scan_ori;
 
 //Odometry
 tf::Transform odom_transform;
 
 
-void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
-{
-	scan_ori.header.frame_id = scan->header.frame_id;
-	scan_ori.angle_min = scan->angle_min;
-	scan_ori.angle_max = scan->angle_max;
-	scan_ori.angle_increment = scan->angle_increment;
-	scan_ori.scan_time = scan->scan_time;
-	scan_ori.time_increment = scan->time_increment;
-	scan_ori.range_min = scan->range_min;
-	scan_ori.range_max = scan->range_max;
-	scan_ori.intensities = scan->intensities;
-	scan_ori.ranges = scan->ranges;
-}
+// void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
+// {
+// 	scan_ori.header.frame_id = scan->header.frame_id;
+// 	scan_ori.angle_min = scan->angle_min;
+// 	scan_ori.angle_max = scan->angle_max;
+// 	scan_ori.angle_increment = scan->angle_increment;
+// 	scan_ori.scan_time = scan->scan_time;
+// 	scan_ori.time_increment = scan->time_increment;
+// 	scan_ori.range_min = scan->range_min;
+// 	scan_ori.range_max = scan->range_max;
+// 	scan_ori.intensities = scan->intensities;
+// 	scan_ori.ranges = scan->ranges;
+// }
 
 //void cmdCallback(const geometry_msgs::Twist::ConstPtr& msg)
 //{
@@ -52,9 +52,9 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 
 void odomCallback(const nav_msgs::Odometry::ConstPtr& odom_msg)
 {
-	tf::Quaternion q;
-	tf::quaternionMsgToTF(odom_msg->pose.pose.orientation, q);
-	odom_transform = tf::Transform(q, tf::Vector3(odom_msg->pose.pose.position.x, odom_msg->pose.pose.position.y, 0));
+  tf::Quaternion q;
+  tf::quaternionMsgToTF(odom_msg->pose.pose.orientation, q);
+  odom_transform = tf::Transform(q, tf::Vector3(odom_msg->pose.pose.position.x, odom_msg->pose.pose.position.y, 0));
 }
 
 //tf::Transform getTransformForMotion(
@@ -112,28 +112,28 @@ int main(int argc, char **argv)
 
 	//Odom
 	//ros::Subscriber cmd_sub = nh.subscribe("/cmd_vel", 100, cmdCallback);
-	//ros::Subscriber odom_sub = nh.subscribe("/odom", 100, odomCallback);
+  ros::Subscriber odom_sub = nh.subscribe("/odom", 10, odomCallback);
 	//LiDAR
-	ros::Subscriber scan_sub = nh.subscribe("/scan_ori", 100, scanCallback);
-	ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("/scan", 100);
+	// ros::Subscriber scan_sub = nh.subscribe("/scan_ori", 100, scanCallback);
+	// ros::Publisher scan_pub = nh.advertise<sensor_msgs::LaserScan>("/scan", 100);
 	
 	//tf::Transform odom_transform;
 	//odom_transform.setIdentity();
 
 	ros::Rate loop_rate(100);
 	
-	ros::Time last_odom_publish_time = ros::Time::now();
+	// ros::Time last_odom_publish_time = ros::Time::now();
 	
-	double wheel_separation_a = 0.2355;
-	double wheel_separation_b = 0.281;
-	double l = wheel_separation_a+wheel_separation_b;
+	// double wheel_separation_a = 0.2355;
+	// double wheel_separation_b = 0.281;
+	// double l = wheel_separation_a+wheel_separation_b;
 
 
 	while(ros::ok())
 	{
 		ros::Time currentTime = ros::Time::now();
 
-		sensor_msgs::LaserScan scan;
+		// sensor_msgs::LaserScan scan;
 		tf::TransformBroadcaster broadcaster;
 
 		//double step_time = 0;
@@ -173,29 +173,29 @@ int main(int argc, char **argv)
 		//}
 		//odom_pub.publish(odom);
         
-        scan.header.stamp = currentTime;
-		scan.header.frame_id = scan_ori.header.frame_id;
-		scan.angle_min = scan_ori.angle_min;
-		scan.angle_max = scan_ori.angle_max;
-		scan.angle_increment = scan_ori.angle_increment;
-		scan.scan_time = scan_ori.scan_time;
-		scan.time_increment = scan_ori.time_increment;
-		scan.range_min = scan_ori.range_min;
-		scan.range_max = scan_ori.range_max;
-		scan.intensities = scan_ori.intensities;
-		scan.ranges = scan_ori.ranges;
-		scan_pub.publish(scan);
+        // scan.header.stamp = currentTime;
+		// scan.header.frame_id = scan_ori.header.frame_id;
+		// scan.angle_min = scan_ori.angle_min;
+		// scan.angle_max = scan_ori.angle_max;
+		// scan.angle_increment = scan_ori.angle_increment;
+		// scan.scan_time = scan_ori.scan_time;
+		// scan.time_increment = scan_ori.time_increment;
+		// scan.range_min = scan_ori.range_min;
+		// scan.range_max = scan_ori.range_max;
+		// scan.intensities = scan_ori.intensities;
+		// scan.ranges = scan_ori.ranges;
+		// scan_pub.publish(scan);
 
-		//if (transform_broadcaster.get()){
-			//transform_broadcaster->sendTransform(
-				//tf::StampedTransform(
-					//odom_transform,
-					//currentTime,
-					//"odom",
-					//"base_footprint"
-				//)
-			//);
-		//}
+    if (transform_broadcaster.get()){
+      transform_broadcaster->sendTransform(
+        tf::StampedTransform(
+          odom_transform,
+          currentTime,
+          "odom",
+          "base_footprint"
+        )
+      );
+    }
 
 		
 		broadcaster.sendTransform(
@@ -226,7 +226,7 @@ int main(int argc, char **argv)
 		broadcaster.sendTransform(
 		tf::StampedTransform(
 			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.0)),
-			currentTime,"base_footprint", "imu_link"));
+			currentTime,"base_link", "imu_link"));
 
 		broadcaster.sendTransform(
 		tf::StampedTransform(

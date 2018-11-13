@@ -17,7 +17,7 @@
   </node> -->
   
   <!-- Controller -->
-  <node pkg="dualarm_mobile_bringup" type="vehicle_controller" name="control"/>
+  <!-- <node pkg="dualarm_mobile_bringup" type="vehicle_controller" name="control"/> -->
   <node pkg="dualarm_mobile_bringup" type="bringup_publisher" name="bringup"/>
     
 </launch>
