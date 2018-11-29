@@ -2,11 +2,10 @@
 
 #--------Include modules---------------
 import os
+import tf
 from copy import copy
 import rospy
 from visualization_msgs.msg import Marker
-from tf.transformations import euler_from_quaternion
-from tf import TransformListener
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import OccupancyGrid
@@ -17,7 +16,7 @@ import numpy as np
 from actor_net import ActorNet
 
 # Subscribers' callbacks----------------------------------------
-mapData=OccupancyGrid()
+# mapData=OccupancyGrid()
 scandata=[]
 path=[]
 
@@ -39,7 +38,7 @@ def pathCallback(data):
 	global path
 	path=[]
 	for pose in data.poses:
-		path.append(list([pose.pose.position.x,pose.pose.position.y,euler_from_quaternion([
+		path.append(list([pose.pose.position.x, pose.pose.position.y, tf.transformations.euler_from_quaternion([
             pose.pose.orientation.x,
             pose.pose.orientation.y,
             pose.pose.orientation.z,
@@ -48,26 +47,26 @@ def pathCallback(data):
 # Node------------------------------------------------------------------
 
 def node():
-	global scandata,lin_vel_t,ang_vel_t,w
+	global scandata,w
 	rospy.init_node('ddpg', anonymous=False)
 	agent = ActorNet(60, 3)
 
 	# load weights
 	agent.load_actor(os.path.abspath(__file__).replace('ddpg.py','weights/actor/model.ckpt'))
 
-	map_topic = rospy.get_param('~map_topic','/map')
+	# map_topic = rospy.get_param('~map_topic','/map')
 	scan_topic = rospy.get_param('~scan_topic','/scan')
 	path_topic = rospy.get_param('~path_topic','/move_base/TebLocalPlannerROS/local_plan')
 	rate = rospy.Rate(rospy.get_param('~rate',10))
 #-------------------------------------------------------------------------
-	rospy.Subscriber(map_topic, OccupancyGrid, mapCallBack)
+	# rospy.Subscriber(map_topic, OccupancyGrid, mapCallBack)
 	rospy.Subscriber(scan_topic, LaserScan, scanCallBack)
 	rospy.Subscriber(path_topic, Path, pathCallback)
 #-------------------------------------------------------------------------
 	pub = rospy.Publisher('ddpg_goal', Marker, queue_size=10) 
 	pub2 = rospy.Publisher('cmd_vel', Twist, queue_size=10) 
 #-------------------------------------------------------------------------
-	listener = TransformListener()
+	listener = tf.TransformListener()
 		
 	q=Point()
 	
@@ -91,27 +90,31 @@ def node():
 #---------------------     Main   Loop     -------------------------------
 #-------------------------------------------------------------------------
 	
-	print("start!!!!!!!")
-	prev_action = [0.0, 0.0, 0.0]
+	print("Main Loop runnig...")
+	# prev_action = [0.0, 0.0, 0.0]
 	while not rospy.is_shutdown():
-		if listener.frameExists("/base_link") and listener.frameExists("/map"):
-			position, quaternion = listener.lookupTransform("/base_footprint", "/map", listener.getLatestCommonTime("/base_link", "/map"))
-			orientation = euler_from_quaternion(quaternion)
-			print(position,orientation)
-		# print(len(path))
+		listener.waitForTransform('/map', '/base_link', rospy.Time(0), rospy.Duration(10.0))
+		cond=0
+		while cond==0:	
+			try:
+				(trans,rot) = listener.lookupTransform('/map', '/base_link', rospy.Time.now())
+				cond=1
+			except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+				cond==0
+			position = np.array([trans[0],trans[1]])
+			orientation = tf.transformations.euler_from_quaternion(rot[2])
+		
+		print("position : ",position)
+		print("orientation : ",orientation)
+		
 		if len(path)>5: 
-			# print("Local Goal(1) :"),
-			# print(path[5])
 			q.x=path[5][0]
 			q.y=path[5][1]
 			qq=[]
 			qq.append(copy(q))
 			points_ddpg.points=qq
 			pub.publish(points_ddpg)
-			# print("scan :"),
-			# print(scandata)
-			# print("path :"),
-			# print(path)
+			
 			'''
 			path[5][0]- position
 			state = np.array(scandata + prev_action + path[5])
@@ -126,6 +129,8 @@ def node():
 			pub2(vel)
 			prev_action = action
 			'''
+		else :
+			print("Path length not enough")
 
 #------------------------------------------------------------------------- 
 		rate.sleep()
