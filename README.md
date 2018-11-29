@@ -25,25 +25,21 @@ Bringup
 roslaunch dualarm_mobile_bringup robot.launch
 ```
 
-```
 Slam (static environment)
 ```bash
 roslaunch dualarm_mobile_slam_navi slam_st.launch
 ```
 
-```
 Navi (static environment)
 ```bash
 roslaunch dualarm_mobile_slam_navi navi_st.launch
 ```
 
-```
 Slam (dynamic environment)
 ```bash
 roslaunch dualarm_mobile_slam_navi slam_dy.launch
 ```
 
-```
 Navi (dynamic environment)
 ```bash
 roslaunch dualarm_mobile_slam_navi navi_dy.launch
