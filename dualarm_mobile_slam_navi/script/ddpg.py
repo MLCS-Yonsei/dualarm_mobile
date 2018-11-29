@@ -8,6 +8,7 @@ import rospy
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import LaserScan
+from nav_msgs.msg import Odometry
 from nav_msgs.msg import OccupancyGrid
 from nav_msgs.msg import Path
 from geometry_msgs.msg import Twist
@@ -18,6 +19,7 @@ from actor_net import ActorNet
 # Subscribers' callbacks----------------------------------------
 # mapData=OccupancyGrid()
 scandata=[]
+odom_robot=[]
 path=[]
 
 
@@ -34,6 +36,14 @@ def scanCallBack(data):
 			scandata[i] = 10.0
 		i=i+1
 
+def odomCallBack(data):
+	global odom_robot   
+	odom_robot=list([data.pose.pose.position.x, data.pose.pose.position.y, tf.transformations.euler_from_quaternion([
+            data.pose.pose.orientation.x,
+            data.pose.pose.orientation.y,
+            data.pose.pose.orientation.z,
+            data.pose.pose.orientation.w])[2]])
+	
 def pathCallback(data):
 	global path
 	path=[]
@@ -56,11 +66,13 @@ def node():
 
 	# map_topic = rospy.get_param('~map_topic','/map')
 	scan_topic = rospy.get_param('~scan_topic','/scan')
+	odom_topic = rospy.get_param('~odom_topic','/odom')
 	path_topic = rospy.get_param('~path_topic','/move_base/TebLocalPlannerROS/local_plan')
 	rate = rospy.Rate(rospy.get_param('~rate',10))
 #-------------------------------------------------------------------------
 	# rospy.Subscriber(map_topic, OccupancyGrid, mapCallBack)
 	rospy.Subscriber(scan_topic, LaserScan, scanCallBack)
+	rospy.Subscriber(odom_topic, Odometry, odomCallBack)
 	rospy.Subscriber(path_topic, Path, pathCallback)
 #-------------------------------------------------------------------------
 	pub = rospy.Publisher('ddpg_goal', Marker, queue_size=10) 
@@ -91,6 +103,8 @@ def node():
 #-------------------------------------------------------------------------
 	
 	print("Main Loop runnig...")
+	trans=[]
+	rot=[]
 	# prev_action = [0.0, 0.0, 0.0]
 	while not rospy.is_shutdown():
 		listener.waitForTransform('/map', '/base_link', rospy.Time(0), rospy.Duration(10.0))
@@ -101,11 +115,14 @@ def node():
 				cond=1
 			except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
 				cond==0
-			position = np.array([trans[0],trans[1]])
-			orientation = tf.transformations.euler_from_quaternion(rot[2])
+			
+			position = trans[0:2]
+			orientation = [list(tf.transformations.euler_from_quaternion(rot))[2]]
+			odom_world = position + orientation
+			
+			print("odom_robot : ", odom_robot, type(odom_robot))
+			print("odom_world : ", odom_world, type(odom_world)) 
 		
-		print("position : ",position)
-		print("orientation : ",orientation)
 		
 		if len(path)>5: 
 			q.x=path[5][0]

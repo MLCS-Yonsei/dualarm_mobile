@@ -8,6 +8,4 @@
   <!-- Controller -->
   <node pkg="dualarm_mobile_bringup" type="bringup_publisher" name="bringup"/>
     
-  <!-- cmd_publisher -->
-  <node pkg="dualarm_mobile_bringup" type="ddpg.py" name="ddpg" output="screen"/>
 </launch>
