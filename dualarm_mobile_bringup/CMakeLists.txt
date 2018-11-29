@@ -41,9 +41,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(vehicle_controller src/vehicle_controller.cpp)
-target_link_libraries(vehicle_controller ${catkin_LIBRARIES})
-
 add_executable(bringup_publisher src/bringup_publisher.cpp)
 target_link_libraries(bringup_publisher ${catkin_LIBRARIES})
 
