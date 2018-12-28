@@ -1,5 +1,5 @@
 # Dualarm_mobile
-Real robot (SLAM &amp; Navi)
+SLAM &amp; Navigation code for mechanum-wheel omnidirectional mobile platform
 
 ## Installation
 Dependency
