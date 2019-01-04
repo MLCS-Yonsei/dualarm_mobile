@@ -1,8 +1,8 @@
 # Dualarm_mobile
 SLAM &amp; Navigation code for mechanum-wheel omnidirectional mobile platform
 
-## Installation
-Dependency
+## Dependency
+Dependency from apt:
 ```bash
 sudo apt-get install ros-kinetic-robot-gmapping
 sudo apt-get install ros-kinetic-robot-amcl
@@ -11,7 +11,7 @@ sudo apt-get install ros-kinetic-teb-local-planner
 Dependency repository:
 https://github.com/MLCS-Yonsei/dualarm_mobile_dep.git
 
-Installation
+## Installation
 ```bash
 cd catkin_ws/src
 git clone https://github.com/MLCS-Yonsei/dualarm_mobile.git
