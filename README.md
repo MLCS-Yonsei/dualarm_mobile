@@ -1,5 +1,5 @@
 # Dualarm_mobile
-SLAM &amp; Navigation code for mechanum wheeled omnidirectional mobile platform
+ROS SLAM &amp; Navigation code for mechanum wheeled omnidirectional mobile platform
 
 ## Dependency
 Dependency from apt:
