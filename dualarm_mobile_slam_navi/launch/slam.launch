@@ -55,7 +55,7 @@
   </node>>
 
 	<!-- cmd_publisher -->
-  <!-- <node pkg="dualarm_mobile_slam_navi" type="ddpg.py" name="ddpg" output="screen"/> -->
+  <node pkg="dualarm_mobile_slam_navi" type="ddpg.py" name="ddpg" output="screen"/>
 
   <!-- Run RViz node (visualization) -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find dualarm_mobile_slam_navi)/rviz/slam_navi.rviz">
