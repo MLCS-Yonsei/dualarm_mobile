@@ -6,10 +6,9 @@ Dependency from apt:
 ```bash
 sudo apt-get install ros-kinetic-robot-gmapping
 sudo apt-get install ros-kinetic-robot-amcl
-sudo apt-get install ros-kinetic-teb-local-planner
 ```
 Dependency repository:
-https://github.com/MLCS-Yonsei/dualarm_mobile_dep.git
+https://github.com/MLCS-Yonsei/teb_local_planner.git
 
 ## Installation
 ```bash
@@ -28,24 +27,14 @@ Bringup
 roslaunch dualarm_mobile_bringup robot.launch
 ```
 
-Slam (static environment)
+Slam
 ```bash
-roslaunch dualarm_mobile_slam_navi slam_st.launch
+roslaunch dualarm_mobile_slam_navi slam.launch
 ```
 
-Navi (static environment)
+Navi
 ```bash
-roslaunch dualarm_mobile_slam_navi navi_st.launch
-```
-
-Slam (dynamic environment)
-```bash
-roslaunch dualarm_mobile_slam_navi slam_dy.launch
-```
-
-Navi (dynamic environment)
-```bash
-roslaunch dualarm_mobile_slam_navi navi_dy.launch
+roslaunch dualarm_mobile_slam_navi navi.launch
 ```
 
 Teleop

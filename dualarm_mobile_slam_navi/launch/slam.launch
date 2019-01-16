@@ -37,12 +37,12 @@
   </node>
 
   <!-- Move_base-->
-  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam file="$(find dualarm_mobile_slam_navi)/param/costmap_common_params_dy.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find dualarm_mobile_slam_navi)/param/costmap_common_params_dy.yaml" command="load" ns="local_costmap" />
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base">
+    <rosparam file="$(find dualarm_mobile_slam_navi)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find dualarm_mobile_slam_navi)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find dualarm_mobile_slam_navi)/param/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find dualarm_mobile_slam_navi)/param/global_costmap_params.yaml" command="load" />
-	<rosparam file="$(find dualarm_mobile_slam_navi)/param/teb_local_planner_params_dy.yaml" command="load" />
+	<rosparam file="$(find dualarm_mobile_slam_navi)/param/teb_local_planner_params.yaml" command="load" />
 	  
     <param name="base_global_planner" value="global_planner/GlobalPlanner" />
 		<param name="planner_frequency" value="20.0" />
@@ -51,8 +51,11 @@
     <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
 		<param name="controller_frequency" value="20.0" />
 		<param name="controller_patience" value="15.0" />
-	<remap from="cmd_vel" to="cmd_vel_fake"/>	
+	<!-- <remap from="cmd_vel" to="cmd_vel_fake"/> -->
   </node>>
+
+	<!-- cmd_publisher -->
+  <node pkg="dualarm_mobile_slam_navi" type="ddpg.py" name="ddpg" output="screen"/>
 
   <!-- Run RViz node (visualization) -->
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find dualarm_mobile_slam_navi)/rviz/slam_navi.rviz">

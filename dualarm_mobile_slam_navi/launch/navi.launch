@@ -7,11 +7,11 @@
 
   <!-- Move_base-->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam file="$(find dualarm_mobile_slam_navi)/param/costmap_common_params_st.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find dualarm_mobile_slam_navi)/param/costmap_common_params_st.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find dualarm_mobile_slam_navi)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find dualarm_mobile_slam_navi)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find dualarm_mobile_slam_navi)/param/local_costmap_params.yaml" command="load" />
     <rosparam file="$(find dualarm_mobile_slam_navi)/param/global_costmap_params.yaml" command="load" />
-	  <rosparam file="$(find dualarm_mobile_slam_navi)/param/teb_local_planner_params_st.yaml" command="load" />
+	  <rosparam file="$(find dualarm_mobile_slam_navi)/param/teb_local_planner_params.yaml" command="load" />
 	  
     <param name="base_global_planner" value="global_planner/GlobalPlanner" />
 		<param name="planner_frequency" value="20.0" />
