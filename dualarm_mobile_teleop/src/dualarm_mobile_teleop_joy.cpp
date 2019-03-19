@@ -84,7 +84,7 @@ void Teleop::publish()
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "teleop_joy");
+  ros::init(argc, argv, "dualarm_mobile_teleop_joy");
   Teleop teleop;
 
   ros::spin();
