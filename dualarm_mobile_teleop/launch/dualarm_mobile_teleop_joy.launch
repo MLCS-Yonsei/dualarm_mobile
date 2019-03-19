@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="teleop" type="teleop_joy" name="teleop_joypad">
+  <node pkg="dualarm_mobile_teleop" type="dualarm_mobile_teleop_joy" name="dualarm_mobile_teleop_joypad" output="screen">
     <param name="scale_angular" value="1.0"/>
     <param name="scale_linear_x" value="0.5"/>
     <param name="scale_linear_y" value="0.5"/>
@@ -7,7 +7,7 @@
     <param name="axis_linear_x" value="1"/>
     <param name="axis_linear_y" value="0"/>
     <param name="axis_angular" value="3"/>
-    <remap from="/teleop_joypad/cmd_vel" to="cmd_vel"/>
+    <remap from="/dualarm_moblie_teleop_joypad/cmd_vel" to="cmd_vel"/>
   </node>
 
   <node pkg="joy" type="joy_node" name="joystick"/>
