@@ -37,9 +37,13 @@ Navi
 roslaunch dualarm_mobile_slam_navi navi.launch
 ```
 
-Teleop
+Teleop (keyboard)
 ```bash
 roslaunch dualarm_mobile_teleop dualarm_mobile_teleop_key.launch
+```
+Teleop (xbox360 controller)
+```bash
+roslaunch dualarm_mobile_teleop dualarm_mobile_teleop_joy.launch
 ```
 
 Map saver
