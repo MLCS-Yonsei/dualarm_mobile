@@ -8,8 +8,10 @@ project(dualarm_mobile_teleop)
 # Find catkin packages and libraries for catkin and system dependencies
 ################################################################################
 find_package(catkin REQUIRED COMPONENTS
+  roscpp
   rospy
   geometry_msgs
+  joy
 )
 
 ################################################################################
@@ -29,13 +31,18 @@ catkin_python_setup()
 # Declare catkin specific configuration to be passed to dependent projects
 ################################################################################
 catkin_package(
-  CATKIN_DEPENDS rospy geometry_msgs
+  CATKIN_DEPENDS roscpp rospy geometry_msgs joy
 )
 
 ################################################################################
 # Build
 ################################################################################
+include_directories(
+  ${catkin_INCLUDE_DIRS}
+)
 
+add_executable(teleop_joy src/teleop_joy.cpp)
+target_link_libraries(teleop_joy ${catkin_LIBRARIES})
 ################################################################################
 # Install
 ################################################################################
