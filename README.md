@@ -6,6 +6,7 @@ Dependency from apt:
 ```bash
 sudo apt-get install ros-kinetic-robot-gmapping
 sudo apt-get install ros-kinetic-robot-amcl
+sudo apt-get install ros-kinetic-joy
 ```
 Dependency repository:
 https://github.com/MLCS-Yonsei/teb_local_planner.git
