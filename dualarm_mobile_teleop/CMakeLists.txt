@@ -41,8 +41,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(teleop_joy src/teleop_joy.cpp)
-target_link_libraries(teleop_joy ${catkin_LIBRARIES})
+add_executable(dualarm_mobile_teleop_joy src/dualarm_mobile_teleop_joy.cpp)
+target_link_libraries(dualarm_mobile_teleop_joy ${catkin_LIBRARIES})
 ################################################################################
 # Install
 ################################################################################

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <launch>
 	<!-- Map path -->
-  <arg name="map_file" default="$(find dualarm_mobile_slam_navi)/maps/map.yaml"/>
+  <!--<arg name="map_file" default="$(find dualarm_mobile_slam_navi)/maps/map.yaml"/>-->
   <!-- Map server -->
-  <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
+  <!--<node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>-->
 
   <!-- Move_base-->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
@@ -23,16 +23,16 @@
   </node>>
 
   <!-- AMCL -->
-  <node pkg="amcl" type="amcl" name="amcl" output="screen">
-		<rosparam file="$(find dualarm_mobile_slam_navi)/param/amcl_params.yaml" command="load" />
-    <param name="odom_model_type"		value="omni"/>
-	  <param name="initial_pose_x"            value="0"/>
-		<param name="initial_pose_y"            value="0"/>
-		<param name="initial_pose_a"            value="0"/>
-	</node>
+  <!--<node pkg="amcl" type="amcl" name="amcl" output="screen">-->
+		<!--<rosparam file="$(find dualarm_mobile_slam_navi)/param/amcl_params.yaml" command="load" />-->
+    <!--<param name="odom_model_type"		value="omni"/>-->
+	  <!--<param name="initial_pose_x"            value="0"/>-->
+		<!--<param name="initial_pose_y"            value="0"/>-->
+		<!--<param name="initial_pose_a"            value="0"/>-->
+	<!--</node>-->
 
   <!-- Run RViz node (visualization) -->
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find dualarm_mobile_slam_navi)/rviz/slam_navi.rviz">
-  </node>
+  <!--<node pkg="rviz" type="rviz" name="rviz" args="-d $(find dualarm_mobile_slam_navi)/rviz/slam_navi.rviz">-->
+  <!--</node>-->
   
 </launch>
