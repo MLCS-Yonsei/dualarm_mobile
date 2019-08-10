@@ -28,14 +28,14 @@ Bringup
 roslaunch dualarm_mobile_bringup robot.launch
 ```
 
-Slam
+SLAM-gmapping
 ```bash
-roslaunch dualarm_mobile_slam_navi slam.launch
+roslaunch dualarm_mobile_navigation gmapping.launch
 ```
 
-Navi
+AMCL
 ```bash
-roslaunch dualarm_mobile_slam_navi navi.launch
+roslaunch dualarm_mobile_navigation amcl.launch
 ```
 
 Teleop (keyboard)
@@ -49,7 +49,7 @@ roslaunch dualarm_mobile_teleop dualarm_mobile_teleop_joy.launch
 
 Map saver
 ```bash
-rosrun map_server map_saver -f /home/seungchul/catkin_ws/src/dualarm_mobile/dualarm_mobile_slam_navi/maps/map
+rosrun map_server map_saver -f $(find dualarm_mobile_navigation)/maps/map
 ```
 
 Goal pub
