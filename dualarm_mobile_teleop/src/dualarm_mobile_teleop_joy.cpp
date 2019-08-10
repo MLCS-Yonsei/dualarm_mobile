@@ -17,7 +17,7 @@ private:
   ros::NodeHandle ph_, nh_;
 
   int linear_x_, linear_y_, angular_, deadman_axis_;
-  double lx_scale_, ly_scale_, a_scale_;
+  double lx_scale_, ly_scale_, a_scale_, deadzone_;
   ros::Publisher vel_pub_;
   ros::Subscriber joy_sub_;
 
@@ -35,9 +35,10 @@ Teleop::Teleop():
   linear_y_(0),
   angular_(3),
   deadman_axis_(4),
-  lx_scale_(0.5),
-  ly_scale_(0.5),
-  a_scale_(1.0)
+  lx_scale_(0.8),
+  ly_scale_(0.8),
+  a_scale_(1.5488),
+  deadzone_(0.1)
 {
   ph_.param("axis_linear_x", linear_x_, linear_x_);
   ph_.param("axis_linear_y", linear_y_, linear_y_);
@@ -46,6 +47,7 @@ Teleop::Teleop():
   ph_.param("scale_angular", a_scale_, a_scale_);
   ph_.param("scale_linear_x", lx_scale_, lx_scale_);
   ph_.param("scale_linear_y", ly_scale_, ly_scale_);
+  ph_.param("deadzone_scale", deadzone_, deadzone_);
 
   deadman_pressed_ = false;
   zero_twist_published_ = false;
@@ -59,9 +61,33 @@ Teleop::Teleop():
 void Teleop::joyCallback(const sensor_msgs::Joy::ConstPtr& joy)
 { 
   geometry_msgs::Twist vel;
-  vel.angular.z = a_scale_*joy->axes[angular_];
-  vel.linear.x = lx_scale_*joy->axes[linear_x_];
-  vel.linear.y = ly_scale_*joy->axes[linear_y_];
+  if (joy->axes[angular_] > deadzone_){
+    vel.angular.z = a_scale_ * (joy->axes[angular_] - deadzone_);
+  }
+  else if (joy->axes[angular_] < -deadzone_){
+    vel.angular.z = a_scale_ * (joy->axes[angular_] + deadzone_);
+  }
+  else {
+    vel.angular.z = 0;
+  }
+  if (joy->axes[linear_x_] > deadzone_){
+    vel.linear.x = lx_scale_ * (joy->axes[linear_x_] - deadzone_);
+  }
+  else if (joy->axes[linear_x_] < -deadzone_){
+    vel.linear.x = lx_scale_ * (joy->axes[linear_x_] + deadzone_);
+  }
+  else {
+    vel.linear.x = 0;
+  }
+  if (joy->axes[linear_y_] > deadzone_){
+    vel.linear.y = ly_scale_ * (joy->axes[linear_y_] - deadzone_);
+  }
+  else if (joy->axes[linear_y_] < -deadzone_){
+    vel.linear.y = ly_scale_ * (joy->axes[linear_y_] + deadzone_);
+  }
+  else {
+    vel.linear.y = 0;
+  }
   last_published_ = vel;
   deadman_pressed_ = joy->buttons[deadman_axis_];
 }

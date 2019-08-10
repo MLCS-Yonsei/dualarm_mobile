@@ -26,26 +26,23 @@ void odomCallback(const nav_msgs::Odometry::ConstPtr& odom_msg)
 int main(int argc, char **argv)
 {
 
-	ros::init(argc, argv, "bring_publisher");
-	ros::NodeHandle nh;
-	
+  ros::init(argc, argv, "bring_publisher");
+  ros::NodeHandle nh;
 
-	boost::shared_ptr<ros::NodeHandle> rosnode;
-	rosnode.reset(new ros::NodeHandle());
-	
-	boost::shared_ptr<tf::TransformBroadcaster> transform_broadcaster;
-	transform_broadcaster.reset(new tf::TransformBroadcaster());
+  boost::shared_ptr<ros::NodeHandle> rosnode;
+  rosnode.reset(new ros::NodeHandle());
 
-	//Odom
-  	ros::Subscriber odom_sub = nh.subscribe("/odom", 10, odomCallback);
-	ros::Rate loop_rate(100);
+  boost::shared_ptr<tf::TransformBroadcaster> transform_broadcaster;
+  transform_broadcaster.reset(new tf::TransformBroadcaster());
 
-	while(ros::ok())
-	{
-		ros::Time currentTime = ros::Time::now();
+  // Odometry message subscriber
+  ros::Subscriber odom_sub = nh.subscribe("/odom", 10, odomCallback);
+  ros::Rate loop_rate(100);
+  tf::TransformBroadcaster broadcaster;
 
-		// sensor_msgs::LaserScan scan;
-		tf::TransformBroadcaster broadcaster;
+  while(ros::ok())
+  {
+    ros::Time currentTime = ros::Time::now();
 
     if (transform_broadcaster.get()){
       transform_broadcaster->sendTransform(
@@ -58,91 +55,91 @@ int main(int argc, char **argv)
       );
     }
 
-		
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.0)),
-			currentTime,"base_footprint", "base_link"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(-0.281, -0.215, -0.020)),
-			currentTime,"base_link", "br_wheel_link"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.0)),
+    	currentTime,"base_footprint", "base_link"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(-0.281, 0.215, -0.020)),
-			currentTime,"base_link", "bl_wheel_link"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(-0.281, -0.215, -0.020)),
+    	currentTime,"base_link", "br_wheel_link"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.281, -0.215, -0.020)),
-			currentTime,"base_link", "fr_wheel_link"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(-0.281, 0.215, -0.020)),
+    	currentTime,"base_link", "bl_wheel_link"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.281, 0.215, -0.020)),
-			currentTime,"base_link", "fl_wheel_link"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.281, -0.215, -0.020)),
+    	currentTime,"base_link", "fr_wheel_link"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.0)),
-			currentTime,"base_link", "imu_link"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.281, 0.215, -0.020)),
+    	currentTime,"base_link", "fl_wheel_link"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.57)),
-			currentTime,"base_link", "base_scan"));
-			
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(0.0, 0.0, 0.0)), tf::Vector3(0.42, 0.0, 0.09)),
-			currentTime,"base_link", "base_sonar_front"));
-		
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(0.0, 0.0, PI)), tf::Vector3(-0.41, 0.0, 0.09)),
-			currentTime,"base_link", "base_sonar_rear"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.0)),
+    	currentTime,"base_link", "imu_link"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(0.0, 0.0, PI/2)), tf::Vector3(0.0, 0.3, 0.09)),
-			currentTime,"base_link", "base_sonar_left"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.57)),
+    	currentTime,"base_link", "base_scan"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(0.0, 0.0, -PI/2)), tf::Vector3(0.0, -0.3, 0.09)),
-			currentTime,"base_link", "base_sonar_right"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(0.0, 0.0, 0.0)), tf::Vector3(0.42, 0.0, 0.09)),
+    	currentTime,"base_link", "base_sonar_front"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.41, 0.0, 0.465)),
-			currentTime,"base_link", "base_kinect"));
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(0.0, 0.0, PI)), tf::Vector3(-0.41, 0.0, 0.09)),
+    	currentTime,"base_link", "base_sonar_rear"));
 
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.018, 0.0)),
-			currentTime,"base_link", "kinect_depth_frame"));
-	
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(-1.57079632679, 0.0, -1.57079632679)), tf::Vector3(0.0, 0.0, 0.0)),
-			currentTime,"base_link", "kinect_depth_optical_frame"));
-		
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, -0.005, 0.0)),
-			currentTime,"base_link", "kinect_rgb_frame"));
-		
-		broadcaster.sendTransform(
-		tf::StampedTransform(
-			tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(-1.57079632679, 0.0, -1.57079632679)), tf::Vector3(0.0, 0.0, 0.0)),
-			currentTime,"base_link", "kinect_rgb_optical_frame"));
-		ros::spinOnce();
-		loop_rate.sleep();
-		
-	}
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(0.0, 0.0, PI/2)), tf::Vector3(0.0, 0.3, 0.09)),
+    	currentTime,"base_link", "base_sonar_left"));
 
-	return 0;
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(0.0, 0.0, -PI/2)), tf::Vector3(0.0, -0.3, 0.09)),
+    	currentTime,"base_link", "base_sonar_right"));
+
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.41, 0.0, 0.465)),
+    	currentTime,"base_link", "base_kinect"));
+
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.018, 0.0)),
+    	currentTime,"base_link", "kinect_depth_frame"));
+
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(-1.57079632679, 0.0, -1.57079632679)), tf::Vector3(0.0, 0.0, 0.0)),
+    	currentTime,"base_link", "kinect_depth_optical_frame"));
+
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, -0.005, 0.0)),
+    	currentTime,"base_link", "kinect_rgb_frame"));
+
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(tf::createQuaternionFromRPY(-1.57079632679, 0.0, -1.57079632679)), tf::Vector3(0.0, 0.0, 0.0)),
+    	currentTime,"base_link", "kinect_rgb_optical_frame"));
+    ros::spinOnce();
+    loop_rate.sleep();
+
+  } //End while (ros::ok())
+
+  return 0;
 
 }
