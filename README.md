@@ -38,6 +38,11 @@ AMCL
 roslaunch dualarm_mobile_navigation amcl.launch
 ```
 
+teb_local_planner
+```bash
+roslaunch dualarm_mobile_navigation teb_local_planner.launch
+```
+
 Teleop (keyboard)
 ```bash
 roslaunch dualarm_mobile_teleop dualarm_mobile_teleop_key.launch
