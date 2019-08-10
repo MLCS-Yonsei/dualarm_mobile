@@ -1,4 +1,4 @@
-# Dualarm_mobile
+# dualarm_mobile
 ROS SLAM &amp; Navigation code for mechanum wheeled omnidirectional mobile platform
 
 ## Dependency
