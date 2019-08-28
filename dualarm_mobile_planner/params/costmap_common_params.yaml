@@ -1,7 +1,7 @@
 
 #---standard pioneer footprint---
 #---(in meters)---
-robot_radius: 0.5
+#robot_radius: 0.5
 footprint: [[ 0.45, 0.35], [-0.45, 0.35], [-0.45,-0.35], [ 0.45,-0.35]]
 
 
@@ -10,8 +10,8 @@ map_type: costmap
 
 obstacle_layer:
  enabled: true
- obstacle_range: 12.0 # the maximum range sensor reading that will result in an obstacle being put into the costmap
- raytrace_range: 15.0 # the range to which we will raytrace freespace given a sensor reading
+ obstacle_range: 5.0 # the maximum range sensor reading that will result in an obstacle being put into the costmap
+ raytrace_range: 10.0 # the range to which we will raytrace freespace given a sensor reading
  inflation_radius: 0.3
  track_unknown_space: true
  combination_method: 1
@@ -22,8 +22,8 @@ obstacle_layer:
 
 inflation_layer:
   enabled:              true
-  cost_scaling_factor:  5.0  # exponential rate at which the obstacle cost drops off (default: 10)
-  inflation_radius:     0.1  # max. distance from an obstacle at which costs are incurred for planning paths.
+  cost_scaling_factor:  4.0  # exponential rate at which the obstacle cost drops off (default: 10)
+  inflation_radius:     0.5  # max. distance from an obstacle at which costs are incurred for planning paths.
 
 static_layer:
   enabled:              true

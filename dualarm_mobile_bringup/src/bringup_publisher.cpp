@@ -14,14 +14,16 @@
 #define PI 3.14159265358979323846
 
 //Odometry
-tf::Transform odom_transform;
+//tf::Transform odom_transform;
 
+/*
 void odomCallback(const nav_msgs::Odometry::ConstPtr& odom_msg)
 {
   tf::Quaternion q;
   tf::quaternionMsgToTF(odom_msg->pose.pose.orientation, q);
   odom_transform = tf::Transform(q, tf::Vector3(odom_msg->pose.pose.position.x, odom_msg->pose.pose.position.y, 0));
 }
+*/
 
 int main(int argc, char **argv)
 {
@@ -32,18 +34,19 @@ int main(int argc, char **argv)
   boost::shared_ptr<ros::NodeHandle> rosnode;
   rosnode.reset(new ros::NodeHandle());
 
-  boost::shared_ptr<tf::TransformBroadcaster> transform_broadcaster;
-  transform_broadcaster.reset(new tf::TransformBroadcaster());
+  //boost::shared_ptr<tf::TransformBroadcaster> transform_broadcaster;
+  //transform_broadcaster.reset(new tf::TransformBroadcaster());
 
   // Odometry message subscriber
-  ros::Subscriber odom_sub = nh.subscribe("/odom", 10, odomCallback);
-  ros::Rate loop_rate(100);
+  //ros::Subscriber odom_sub = nh.subscribe("/wheel_encoder/odom", 10, odomCallback);
+  ros::Rate loop_rate(20);
   tf::TransformBroadcaster broadcaster;
 
   while(ros::ok())
   {
     ros::Time currentTime = ros::Time::now();
 
+    /*
     if (transform_broadcaster.get()){
       transform_broadcaster->sendTransform(
         tf::StampedTransform(
@@ -54,7 +57,17 @@ int main(int argc, char **argv)
         )
       );
     }
+    */
 
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.42, 0.0, 0.66)),
+    	currentTime,"odom", "camera_odom_frame"));
+
+    broadcaster.sendTransform(
+    tf::StampedTransform(
+    	tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(-0.42, 0.0, -0.66)),
+    	currentTime,"camera_pose_frame", "base_footprint"));
 
     broadcaster.sendTransform(
     tf::StampedTransform(

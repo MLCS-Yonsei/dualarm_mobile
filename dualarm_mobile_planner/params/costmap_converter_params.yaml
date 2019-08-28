@@ -19,7 +19,7 @@ TebLocalPlannerROS:
     filter_by_convexity: false
     min_convexity: 0.0
     max_convexity: 1.0
-    dt: 0.05
+    dt: 0.1
     dist_thresh: 60.0
     max_allowed_skipped_frames: 3
     max_trace_length: 10

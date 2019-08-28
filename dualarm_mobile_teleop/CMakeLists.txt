@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   geometry_msgs
-  joy
+  #joy
 )
 
 ################################################################################
@@ -31,7 +31,7 @@ catkin_python_setup()
 # Declare catkin specific configuration to be passed to dependent projects
 ################################################################################
 catkin_package(
-  CATKIN_DEPENDS roscpp rospy geometry_msgs joy
+  CATKIN_DEPENDS roscpp rospy geometry_msgs #joy
 )
 
 ################################################################################
@@ -41,8 +41,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(dualarm_mobile_teleop_joy src/dualarm_mobile_teleop_joy.cpp)
-target_link_libraries(dualarm_mobile_teleop_joy ${catkin_LIBRARIES})
+#add_executable(dualarm_mobile_teleop_joy src/dualarm_mobile_teleop_joy.cpp)
+#target_link_libraries(dualarm_mobile_teleop_joy ${catkin_LIBRARIES})
 ################################################################################
 # Install
 ################################################################################

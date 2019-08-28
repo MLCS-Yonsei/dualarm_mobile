@@ -7,5 +7,6 @@
   
   <!-- Controller -->
   <node pkg="dualarm_mobile_bringup" type="bringup_publisher" name="bringup"/>
+  <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odom"/>
     
 </launch>
