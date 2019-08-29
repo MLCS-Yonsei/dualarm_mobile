@@ -41,28 +41,28 @@ int main(int argc, char **argv)
     odom.header.frame_id = "odom";
     odom.child_frame_id = "base_footprint";
 		
-    odom.pose.covariance[0] = 0.001;
-    odom.pose.covariance[7] = 0.001;
-    odom.pose.covariance[14] = 1000000000000.0;
-    odom.pose.covariance[21] = 1000000000000.0;
-    odom.pose.covariance[28] = 1000000000000.0;
+    odom.pose.covariance[0] = 0.01;
+    odom.pose.covariance[7] = 0.01;
+    odom.pose.covariance[14] = 0.01;
+    odom.pose.covariance[21] = 0.0001;
+    odom.pose.covariance[28] = 0.0001;
 		
     if (abs(odom.twist.twist.angular.z) < 0.0001) {
-      odom.pose.covariance[35] = 0.01;
+      odom.pose.covariance[35] = 0.0001;
     }else{
-      odom.pose.covariance[35] = 100.0;
+      odom.pose.covariance[35] = 0.01;
     }
 
-    odom.twist.covariance[0] = 0.001;
-    odom.twist.covariance[7] = 0.001;
-    odom.twist.covariance[14] = 0.001;
-    odom.twist.covariance[21] = 1000000000000.0;
-    odom.twist.covariance[28] = 1000000000000.0;
+    odom.twist.covariance[0] = 0.01;
+    odom.twist.covariance[7] = 0.01;
+    odom.twist.covariance[14] = 0.01;
+    odom.twist.covariance[21] = 0.0001;
+    odom.twist.covariance[28] = 0.0001;
 		
     if (abs(odom.twist.twist.angular.z) < 0.0001) {
-      odom.twist.covariance[35] = 0.01;
+      odom.twist.covariance[35] = 0.0001;
     }else{
-      odom.twist.covariance[35] = 100.0;
+      odom.twist.covariance[35] = 0.01;
     }
 
     odom_pub.publish(odom);
