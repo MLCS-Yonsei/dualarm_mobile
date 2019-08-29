@@ -29,6 +29,7 @@
   <run_depend>src</run_depend>
   <run_depend>worlds</run_depend>
   <run_depend>rospy</run_depend>
+  <run_depend>tf</run_depend>
   
   <export>
 

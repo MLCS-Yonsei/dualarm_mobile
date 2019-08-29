@@ -1,45 +1,35 @@
-#include <math.h>
-
-#include "ros/ros.h"
-
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
-#include <geometry_msgs/Twist.h>
-#include <nav_msgs/Odometry.h>
-#include <std_msgs/Time.h>
-#include <tf/transform_broadcaster.h>
-#include <tf/transform_listener.h>
-#include <tf/transform_datatypes.h>
+#include <dualarm_mobile_bringup/publisher.h>
 
 int main(int argc, char **argv)
 {
 
   ros::init(argc, argv, "odom_publisher");
+
   ros::NodeHandle nh;
 
-  boost::shared_ptr<ros::NodeHandle> rosnode;
-  rosnode.reset(new ros::NodeHandle());
-
-  ros::Rate loop_rate(100);
   tf::TransformListener listener;
   tf::TransformBroadcaster broadcaster;
 
-  ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>("/odom", 10);
+  nh.param<int>("rate", rate, 200);
+  nh.param<std::string>("odom_topic", topic_name, "/odom");
 
-  ros::Time lastTime = ros::Time::now();
-  listener.waitForTransform("odom", "base_footprint", ros::Time(0), ros::Duration(10.0));
-  listener.waitForTransform("odom", "base_footprint", ros::Time(0), ros::Duration(10.0));
+  ros::Rate loop_rate(rate);
 
-  while(ros::ok())
+  ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>(topic_name, 10);
+
+  lastTime = ros::Time::now();
+
+  // listener.waitForTransform("odom", "base_footprint", ros::time(0), ros::duration(100.0));
+
+  while (ros::ok())
   {
-    tf::StampedTransform transform;
-    geometry_msgs::Twist twist;
-    nav_msgs::Odometry odom;
     ros::Time currentTime = ros::Time::now();
+
     try
     {
-      listener.lookupTransform("odom", "base_footprint", currentTime, transform);
-      listener.lookupTwist("odom", "base_footprint", currentTime, currentTime-lastTime, odom.twist.twist);
+      listener.waitForTransform("odom", "base_footprint", ros::Time(0), ros::Duration(1.0));
+      listener.lookupTransform("odom", "base_footprint", ros::Time(0), transform);
+      listener.lookupTwist("odom", "base_footprint", ros::Time(0), currentTime-lastTime, odom.twist.twist);
     }
     catch (tf::TransformException ex)
     {
@@ -76,12 +66,13 @@ int main(int argc, char **argv)
     }
 
     odom_pub.publish(odom);
+
     lastTime = currentTime;
 
     loop_rate.sleep();
 
-  } //End while (ros::ok())
+  } // end while (ros::ok())
 
   return 0;
 
-}
+} // end main

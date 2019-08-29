@@ -10,12 +10,6 @@ find_package(catkin REQUIRED COMPONENTS
   tf
 )
 
-  generate_messages(
-    DEPENDENCIES
-     std_msgs
-  )
-
-
 catkin_package(
   LIBRARIES 
     dualarm_mobile_bringup
@@ -27,17 +21,17 @@ catkin_package(
 )
 
 catkin_package(
-  INCLUDE_DIRS
-  LIBRARIES 
-    vehicle_v2_nodelet
+  INCLUDE_DIRS include
+  LIBRARIES dualarm_mobile_bringup
   CATKIN_DEPENDS 
-    rospy 
     roscpp
     geometry_msgs 
-    nav_msgs 
+    nav_msgs
+    tf
 )
 
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
