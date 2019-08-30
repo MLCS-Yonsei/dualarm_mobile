@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 
   tf::TransformBroadcaster broadcaster;
 
-  nh.param<int>("rate", rate, 30);
+  nh.param<int>("rate", rate, 40);
 
   ros::Rate loop_rate(rate);
 

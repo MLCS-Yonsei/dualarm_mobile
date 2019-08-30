@@ -21,6 +21,6 @@ tf::StampedTransform transform;
 
 nav_msgs::Odometry odom;
 
-ros::Time lastTime;
+ros::Time currentTime;
 
 #endif

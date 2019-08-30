@@ -17,19 +17,16 @@ int main(int argc, char **argv)
 
   ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>(topic_name, 10);
 
-  lastTime = ros::Time::now();
-
-  // listener.waitForTransform("odom", "base_footprint", ros::time(0), ros::duration(100.0));
-
+  listener.waitForTransform("odom", "base_footprint", ros::Time::now(), ros::Duration(3.0));
   while (ros::ok())
   {
-    ros::Time currentTime = ros::Time::now();
 
     try
     {
-      listener.waitForTransform("odom", "base_footprint", ros::Time(0), ros::Duration(1.0));
-      listener.lookupTransform("odom", "base_footprint", ros::Time(0), transform);
-      listener.lookupTwist("odom", "base_footprint", ros::Time(0), currentTime-lastTime, odom.twist.twist);
+      currentTime = ros::Time::now();
+      listener.waitForTransform("odom", "base_footprint", currentTime, ros::Duration(3.0));
+      listener.lookupTransform("odom", "base_footprint", currentTime, transform);
+      listener.lookupTwist("odom", "base_footprint", currentTime, ros::Duration(0.02), odom.twist.twist);
     }
     catch (tf::TransformException ex)
     {
@@ -66,8 +63,6 @@ int main(int argc, char **argv)
     }
 
     odom_pub.publish(odom);
-
-    lastTime = currentTime;
 
     loop_rate.sleep();
 
