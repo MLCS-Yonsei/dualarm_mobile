@@ -1,7 +1,7 @@
 TebLocalPlannerROS:
   costmap_converter_plugin: "costmap_converter::CostmapToDynamicObstacles"
   costmap_converter_spin_thread: true
-  costmap_converter_rate: 20
+  costmap_converter_rate: 10
   costmap_converter/CostmapToDynamicObstacles:
     alpha_slow: 0.3
     alpha_fast: 0.85
@@ -24,3 +24,8 @@ TebLocalPlannerROS:
     max_allowed_skipped_frames: 3
     max_trace_length: 10
     static_converter_plugin: "costmap_converter::CostmapToPolygonsDBSMCCH"
+  #costmap_converter/CostmapToPolygonsDBSMCCH:
+    cluster_max_distance: 0.1
+    cluster_min_pts: 3
+    cluster_max_pts: 360
+    convex_hull_min_pt_separation: 0.1

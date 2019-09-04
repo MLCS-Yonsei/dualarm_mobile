@@ -44,12 +44,12 @@ TebLocalPlannerROS:
 
   # Obstacles
 
-  min_obstacle_dist: 0.6                    # This value must also include our robot radius, since footprint_model is set to "point".
+  min_obstacle_dist: 0.55                   # This value must also include our robot radius, since footprint_model is set to "point".
   include_costmap_obstacles: true
-  include_dynamic_obstacles: false
+  include_dynamic_obstacles: true
   costmap_obstacles_behind_robot_dist: 2.0  # Limit the occupied local costmap obstacles taken into account for planning behind the robot (specify distance in meters).
   obstacle_poses_affected: 30               # Each obstacle position is attached to the closest pose on the trajectory in order to keep a distance. 
-  inflation_dist: 0.5                       # Buffer zone around obstacles with non-zero penalty costs
+  inflation_dist: 0.6                       # Buffer zone around obstacles with non-zero penalty costs
   legacy_obstacle_association: false        # The strategy of connecting trajectory poses with obstacles for optimization has been modified. You can switch to the old/previous strategy by setting this parameter to true. Old strategy: for each obstacle, find the nearest TEB pose; new strategy: for each teb pose, find only "relevant" obstacles.
   obstacle_association_force_inclusion_factor: 1.5  #The non-legacy obstacle association strategy tries to connect only relevant obstacles with the discretized trajectory during optimization. But all obstacles within a specifed distance are forced to be included
   obstacle_association_cutoff_factor: 5
@@ -73,8 +73,8 @@ TebLocalPlannerROS:
   weight_kinematics_turning_radius: 0       # Optimization weight for enforcing a minimum turning radius (only for carlike robots).
   weight_optimaltime: 1                     # Optimization weight for contracting the trajectory w.r.t transition/execution time.
   weight_obstacle: 50                       # Optimization weight for keeping a minimum distance from obstacles.
-  weight_viapoint: 0.01                        # Optimization weight for tracking global trajectory
-  weight_inflation: 0.1                     # Optimization weight for the inflation penalty (should be small).
+  weight_viapoint: 0                        # Optimization weight for tracking global trajectory
+  weight_inflation: 0                       # Optimization weight for the inflation penalty (should be small).
   weight_adapt_factor: 2.0                  # Some special weights (currently weight_obstacle) are repeatedly scaled by this factor in each outer TEB iteration.
 
   # Homotopy Class Planner
