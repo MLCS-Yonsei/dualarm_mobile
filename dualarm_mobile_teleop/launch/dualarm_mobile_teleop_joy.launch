@@ -9,7 +9,7 @@
     <param name="axis_linear_x"   value="1"/>
     <param name="axis_linear_y"   value="0"/>
     <param name="axis_angular"    value="3"/>
-    <remap from="/dualarm_moblie_teleop_joypad/cmd_vel" to="cmd_vel"/>
+    <remap from="dualarm_mobile_teleop_joypad/cmd_vel" to="cmd_vel" />
   </node>
 
   <node pkg="joy" type="joy_node" name="joystick"/>

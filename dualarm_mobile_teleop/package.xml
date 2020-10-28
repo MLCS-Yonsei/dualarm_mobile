@@ -15,5 +15,5 @@
   <depend>roscpp</depend>
   <depend>rospy</depend>
   <depend>geometry_msgs</depend>
-  <depend>joy</depend>
+  <!--<depend>joy</depend>-->
 </package>

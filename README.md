@@ -25,28 +25,39 @@ source ~/.bashrc && source ~/catkin_ws/devel/setup.bash
 ### Running an environment
 Bringup
 ```bash
-roslaunch dualarm_mobile_bringup robot.launch
+roslaunch dualarm_mobile_bringup bringup.launch
 ```
 
 SLAM-gmapping
 ```bash
-roslaunch dualarm_mobile_navigation gmapping.launch
+roslaunch dualarm_mobile_localization gmapping.launch
 ```
 
 AMCL
 ```bash
-roslaunch dualarm_mobile_navigation amcl.launch
+roslaunch dualarm_mobile_localization amcl.launch
+```
+
+cartographer_ros (SLAM)
+```bash
+roslaunch dualarm_mobile_localization cartographer_slam.launch
+```
+
+cartographer_ros (only localization)
+```bash
+roslaunch dualarm_mobile_localization cartographer_navigation.launch
 ```
 
 teb_local_planner
 ```bash
-roslaunch dualarm_mobile_navigation teb_local_planner.launch
+roslaunch dualarm_mobile_planner teb_local_planner.launch
 ```
 
 Teleop (keyboard)
 ```bash
 roslaunch dualarm_mobile_teleop dualarm_mobile_teleop_key.launch
 ```
+
 Teleop (xbox360 controller)
 ```bash
 roslaunch dualarm_mobile_teleop dualarm_mobile_teleop_joy.launch
