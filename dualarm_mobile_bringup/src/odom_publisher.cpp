@@ -19,8 +19,13 @@ ethercat_test::vel encoder;
 
 ros::Time currentTime;
 
+double FrontLeft = 0.0;
+double FrontRight = 0.0;
+double RearRight = 0.0;
+double RearLeft = 0.0;
 
-void encoderCallback(const vel& msg)
+
+void encoderCallback(const ethercat_test::vel& msg)
 {
   FrontLeft  =  double(msg.velocity[0]);
   FrontRight = -double(msg.velocity[1]);
