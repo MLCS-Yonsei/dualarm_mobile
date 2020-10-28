@@ -1,7 +1,7 @@
 #include <dualarm_mobile_bringup/publisher.h>
 
 
-bool isInitialized;
+bool isInitialized = false;
 ros::Publisher rpm_pub;
 ethercat_test::vel rpm_msg;
 

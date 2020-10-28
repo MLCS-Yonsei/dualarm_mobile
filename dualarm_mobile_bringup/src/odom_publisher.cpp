@@ -19,10 +19,10 @@ ethercat_test::vel encoder;
 
 ros::Time currentTime;
 
-double FrontLeft = 0.0;
-double FrontRight = 0.0;
-double RearRight = 0.0;
-double RearLeft = 0.0;
+double frontLeft = 0.0;
+double frontRight = 0.0;
+double rearRight = 0.0;
+double rearLeft = 0.0;
 
 
 void encoderCallback(const ethercat_test::vel& msg)
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
   nh.param<bool>("broadcast_tf", broadcast_tf, true);
   nh.param<bool>("listen_tf", listen_tf, false);
   nh.param<std::string>("odom_topic", odom_topic, "/odom");
-  nh.param<std::string>("encoder_topic", encoder_name, "/measure");
+  nh.param<std::string>("encoder_topic", encoder_topic, "/measure");
 
   ros::Rate loop_rate(rate);
 

@@ -1,5 +1,8 @@
 #include <dualarm_mobile_bringup/publisher.h>
 
+
+int rate;
+
 int main(int argc, char **argv)
 {
 
