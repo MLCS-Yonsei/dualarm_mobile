@@ -1,24 +1,31 @@
 #include <dualarm_mobile_bringup/publisher.h>
 
 
-// Variables for computing odometry
-double wheelRadius = 0.076;
-double radps_to_rpm = 60.0 / 2.0 / PI;
-double rpm_to_radps = 2.0 * PI / 60.0;
-double gearRatio = 73.5;
-double wheelSepearation = 0.5165;
-double paramFKLinear = wheelRadius * rpm_to_radps / gearRatio / 4.0;
-double paramFKAngular = paramFKLinear / wheelSepearation;
-double paramIK = radps_to_rpm * gearRatio / wheelRadius;
-double normLimit = 0.74;
+int rate;
+
+bool broadcast_tf;
+
+bool listen_tf;
+
+std::string odom_topic;
+
+std::string encoder_topic;
+
+tf::StampedTransform transform;
+
+nav_msgs::Odometry odom;
+
+ethercat_test::vel encoder;
+
+ros::Time currentTime;
 
 
 void encoderCallback(const vel& msg)
 {
-  FrontLeft  =  double(msg.vel[idx]);
-  FrontRight = -double(msg.vel[idx]);
-  RearRight  = -double(msg.vel[idx]);
-  RearLeft   =  double(msg.vel[idx]);
+  FrontLeft  =  double(msg.velocity[0]);
+  FrontRight = -double(msg.velocity[1]);
+  RearRight  = -double(msg.velocity[2]);
+  RearLeft   =  double(msg.velocity[3]);
 }
 
 
