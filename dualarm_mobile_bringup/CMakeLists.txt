@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   nodelet
   tf
+  ethercat_test
 )
 
 catkin_package(
@@ -18,6 +19,7 @@ catkin_package(
     nav_msgs 
     roscpp 
     std_msgs
+    ethercat_test
 )
 
 catkin_package(
@@ -28,6 +30,7 @@ catkin_package(
     geometry_msgs 
     nav_msgs
     tf
+    ethercat_test
 )
 
 include_directories(
@@ -40,3 +43,6 @@ target_link_libraries(bringup_publisher ${catkin_LIBRARIES})
 
 add_executable(odom_publisher src/odom_publisher.cpp)
 target_link_libraries(odom_publisher ${catkin_LIBRARIES})
+
+add_executable(cmd_vel_publisher src/cmd_vel_publisher.cpp)
+target_link_libraries(cmd_vel_publisher ${catkin_LIBRARIES})
