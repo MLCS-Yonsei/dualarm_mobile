@@ -50,7 +50,7 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
 
   rpm_pub = nh.advertise<ethercat_test::vel>("/input_msg", 1);
-  ros::Subscriber cmd_vel_sub = nh.subscribe("/cmd_vel", 1, cmdCallback)
+  ros::Subscriber cmd_vel_sub = nh.subscribe("/cmd_vel", 1, cmdCallback);
   isInitialized = true;
   ros::spin();
 

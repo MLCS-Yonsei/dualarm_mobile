@@ -27,10 +27,10 @@ double rearLeft = 0.0;
 
 void encoderCallback(const ethercat_test::vel& msg)
 {
-  FrontLeft  =  double(msg.velocity[0]);
-  FrontRight = -double(msg.velocity[1]);
-  RearRight  = -double(msg.velocity[2]);
-  RearLeft   =  double(msg.velocity[3]);
+  frontLeft  =  double(msg.velocity[0]);
+  frontRight = -double(msg.velocity[1]);
+  rearRight  = -double(msg.velocity[2]);
+  rearLeft   =  double(msg.velocity[3]);
 }
 
 
@@ -79,10 +79,6 @@ int main(int argc, char **argv)
     }
     else
     {
-      if (!encoder_lock)
-      {
-        encoder_lock = true;
-      }
       double linear_vel_x  = paramFKLinear  * (frontRight + frontLeft + rearRight + rearLeft);
       double linear_vel_y  = paramFKLinear  * (frontRight - frontLeft - rearRight + rearLeft);
       double angular_vel_z = paramFKAngular * (frontRight - frontLeft + rearRight - rearLeft);
@@ -95,15 +91,15 @@ int main(int argc, char **argv)
 
       if ( abs(angular_vel_z) < 0.0001 )
       {
-        odom_msg.pose.covariance[35] = 0.01;
-        odom_msg.twist.covariance[35] = 0.01;
+        odom.pose.covariance[35] = 0.01;
+        odom.twist.covariance[35] = 0.01;
 
         tf_from_vel.setOrigin(tf::Vector3(static_cast<double>(linear_vel_x*stepTime), static_cast<double>(linear_vel_y*stepTime), 0.0));
       }
       else
       {
-        odom_msg.pose.covariance[35] = 100.0;
-        odom_msg.twist.covariance[35] = 100.0;
+        odom.pose.covariance[35] = 100.0;
+        odom.twist.covariance[35] = 100.0;
 
         //Follow circular arc
         double angleChange = angular_vel_z * stepTime;
