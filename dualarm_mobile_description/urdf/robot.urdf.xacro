@@ -69,7 +69,7 @@
     <joint name="base_joint" type="fixed">
         <parent link="base_footprint"/>
         <child link="base_link"/>
-        <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
     </joint>
 
     <!-- Back right wheel -->
@@ -193,7 +193,7 @@
     </joint>
 
     <!-- Scan sensor -->
-    <link name="base_scan">
+    <link name="velodyne">
         <inertial>
             <mass value="0.16"/>
             <origin xyz="0 0 0.0"/>
@@ -215,9 +215,71 @@
     </link>
     <joint name="scan_joint" type="fixed">
         <parent link="base_link"/>
-        <child link="base_scan"/>
-        <origin xyz="0 0 0.57" rpy="0 0 0"/>
+        <child link="velodyne"/>
+        <origin xyz="0 0 0.30" rpy="0 0 1.57079632679"/> <!--0 0 0.57 0 0 0-->
     </joint>
+
+    <!-- rplidar front -->
+    <link name="rplidar_front">
+        <collision>
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <geometry>
+            <mesh filename="package://dualarm_mobile_description/meshes/rplidar.dae" scale="0.001 0.001 0.001" />
+        </geometry>
+        </collision>
+
+        <visual>
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <geometry>
+            <mesh filename="package://dualarm_mobile_description/meshes/rplidar.dae" scale="0.001 0.001 0.001" />
+        </geometry>
+        </visual>
+
+        <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+    </link>
+
+    <!-- rplidar rear -->
+    <link name="rplidar_rear">
+        <collision>
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <geometry>
+            <mesh filename="package://dualarm_mobile_description/meshes/rplidar.dae" scale="0.001 0.001 0.001" />
+        </geometry>
+        </collision>
+
+        <visual>
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <geometry>
+            <mesh filename="package://dualarm_mobile_description/meshes/rplidar.dae" scale="0.001 0.001 0.001" />
+        </geometry>
+        </visual>
+
+        <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+    </link>
+
+    <joint name="rplidar_front_joint" type="fixed">
+        <axis xyz="0 1 0" />
+        <origin xyz="0.33 -0.24 0.08" rpy="0 0 3.1415"/>
+        <parent link="base_link"/>
+        <child link="rplidar_front"/>
+    </joint>
+
+    <joint name="rplidar_rear_joint" type="fixed">
+        <axis xyz="0 1 0" />
+        <origin xyz="-0.33 0.24 0.08" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="rplidar_rear"/>
+    </joint>
+
+
 
     <!-- Front sonar sensor -->
     <link name="base_sonar_front">

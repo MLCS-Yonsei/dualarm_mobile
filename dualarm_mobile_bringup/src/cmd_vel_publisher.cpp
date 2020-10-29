@@ -9,7 +9,7 @@ ethercat_test::vel rpm_msg;
 void cmdCallback(const geometry_msgs::Twist& cmd_vel)
 {
 
-  int rpm[4] = {0.0, 0.0, 0.0, 0.0};
+  int rpm[4] = {0, 0, 0, 0};
 
   double u1 = cmd_vel.linear.x;
   double u2 = cmd_vel.linear.y;
