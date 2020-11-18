@@ -7,18 +7,20 @@
    
   <!--TF-->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-	<param name="publish_frequency" value="100.0"/>
+	  <param name="publish_frequency" value="100.0"/>
   </node>
 
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-	<param name="publish_frequency" value="100.0"/>
+	  <param name="publish_frequency" value="100.0"/>
   </node>
 
   <!-- Sensors -->
   <!-- <include file="$(find dualarm_mobile_bringup)/launch/sensor.launch" />-->
   
   <!-- cmd_vel and odom -->
-  <node pkg="dualarm_mobile_bringup" type="cmd_vel_publisher" name="cmd_vel_node"/>
+  <node pkg="dualarm_mobile_bringup" type="cmd_vel_publisher" name="cmd_vel_node">
+	  <param name="smoothing_factor" value="5"/> <!--  1~10, lower means smoother -->
+  </node>
   <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odom_node" output="screen"/>
 
   <!-- launch velodyne and rplidar -->
