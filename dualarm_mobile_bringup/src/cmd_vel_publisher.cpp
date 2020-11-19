@@ -55,7 +55,7 @@ void encoderCallback(const ethercat_test::vel& msg)
   if (isInitialized)
   {
     for (unsigned int idx = 0; idx < 4; ++idx)
-      rpm_msg.velocity[idx] = (smoothing_factor * rpm_ref[idx] + (10 - smoothing_factor) * rpm[idx]) / 10;
+      rpm_msg.velocity[idx] = (smoothing_factor * rpm_ref[idx] + (100 - smoothing_factor) * rpm[idx]) / 100;
     rpm_pub.publish(rpm_msg);
   }
 }
@@ -68,9 +68,9 @@ int main(int argc, char **argv)
 
   ros::NodeHandle nh;
 
-  nh.param<int>("smoothing_factor", smoothing_factor, 10);
-  if (smoothing_factor > 10) {
-    smoothing_factor = 10;
+  nh.param<int>("smoothing_factor", smoothing_factor, 4);
+  if (smoothing_factor > 100) {
+    smoothing_factor = 100;
   }
   else if (smoothing_factor < 1) {
     smoothing_factor = 1;
