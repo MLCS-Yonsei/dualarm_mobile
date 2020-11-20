@@ -12,7 +12,7 @@
 
   <group ns="rplidar_front">
     <!-- launch rplidar node -->
-    <include file="$(find rplidar_ros)/launch/rplidar_arg.launch">
+    <include file="$(find dualarm_mobile_bringup)/launch/rplidar_arg.launch">
       <arg name="nodename" value="rplidar_front_node"/>
       <arg name="frame_id" value="$(arg frame_id_front)" />
       <arg name="serial_port" value="$(arg serial_port_front)" />
@@ -27,7 +27,7 @@
 
   <group ns="rplidar_rear">
     <!-- launch rplidar node -->
-    <include file="$(find rplidar_ros)/launch/rplidar_arg.launch">
+    <include file="$(find dualarm_mobile_bringup)/launch/rplidar_arg.launch">
       <arg name="nodename" value="rplidar_rear_node"/>
       <arg name="frame_id" value="$(arg frame_id_rear)" />
       <arg name="serial_port" value="$(arg serial_port_rear)" />

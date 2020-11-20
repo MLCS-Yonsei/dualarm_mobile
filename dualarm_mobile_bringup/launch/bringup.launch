@@ -24,7 +24,7 @@
   <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odom_node" output="screen"/>
 
   <!-- launch velodyne and rplidar -->
-  <include file="$(find rplidar_ros)/launch/bringup_rplidar_velodyne.launch">
+  <include file="$(find dualarm_mobile_bringup)/launch/bringup_rplidar_velodyne.launch">
   </include>
 
 </launch>
