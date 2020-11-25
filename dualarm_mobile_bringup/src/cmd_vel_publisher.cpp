@@ -4,13 +4,14 @@
 bool isInitialized = false;
 ros::Publisher rpm_pub;
 ethercat_test::vel rpm_msg;
-int smoothing_factor
+int smoothing_factor;
 
-int rpm_ref[4] = {0, 0, 0, 0};
-
+//int rpm_ref[4] = {0, 0, 0, 0};
+int rpm[4] = {0, 0, 0, 0};
 
 void cmdCallback(const geometry_msgs::Twist& cmd_vel)
 {
+  int rpm_ref[4] = {0, 0, 0, 0};
 
   double u1 = cmd_vel.linear.x;
   double u2 = cmd_vel.linear.y;
@@ -34,30 +35,36 @@ void cmdCallback(const geometry_msgs::Twist& cmd_vel)
     rpm_ref[3] = int( paramIK * (u1 + u2 - u3));
   }
 
-  // if (isInitialized)
-  // {
-  //   for (unsigned int idx = 0; idx < 4; ++idx)
-  //     rpm_msg.velocity[idx] = rpm[idx];
-  //   rpm_pub.publish(rpm_msg);
-  // }
+   if (isInitialized)
+   {
+     for (unsigned int idx = 0; idx < 4; ++idx)
+     {
+	     std::cout<<"smoothing f : "<<smoothing_factor<<std::endl;
+	     std::cout<<"rpm_ref["<<idx<<"] : "<<rpm_ref[idx]<<std::endl;
+	     std::cout<<"rpm["<<idx<<"] : "<<rpm[idx]<<std::endl;
+	     rpm_msg.velocity[idx] = (smoothing_factor * rpm_ref[idx] + (100 -smoothing_factor) * rpm[idx]) / 100;
+             std::cout<<"out["<<idx<<"] : "<<rpm_msg.velocity[idx]<<std::endl;
+     }
+     rpm_pub.publish(rpm_msg);
+   }
 }
 
 void encoderCallback(const ethercat_test::vel& msg)
 {
 
-  int rpm[4] = {0, 0, 0, 0};
+//  int rpm[4] = {0, 0, 0, 0};
 
   rpm[0] =  msg.velocity[0];
-  rpm[1] = -msg.velocity[1];
-  rpm[2] = -msg.velocity[2];
+  rpm[1] =  msg.velocity[1];
+  rpm[2] =  msg.velocity[2];
   rpm[3] =  msg.velocity[3];
 
-  if (isInitialized)
-  {
-    for (unsigned int idx = 0; idx < 4; ++idx)
-      rpm_msg.velocity[idx] = (smoothing_factor * rpm_ref[idx] + (100 - smoothing_factor) * rpm[idx]) / 100;
-    rpm_pub.publish(rpm_msg);
-  }
+//  if (isInitialized)
+//  {
+//    for (unsigned int idx = 0; idx < 4; ++idx)
+//      rpm_msg.velocity[idx] = (smoothing_factor * rpm_ref[idx] + (100 - smoothing_factor) * rpm[idx]) / 100;
+//    rpm_pub.publish(rpm_msg);
+//  }
 }
 
 
@@ -68,7 +75,7 @@ int main(int argc, char **argv)
 
   ros::NodeHandle nh;
 
-  nh.param<int>("smoothing_factor", smoothing_factor, 4);
+  nh.param<int>("/cmd_vel_node/smoothing_factor", smoothing_factor, 4);
   if (smoothing_factor > 100) {
     smoothing_factor = 100;
   }
@@ -77,6 +84,7 @@ int main(int argc, char **argv)
   }
   rpm_pub = nh.advertise<ethercat_test::vel>("/input_msg", 1);
   ros::Subscriber cmd_vel_sub = nh.subscribe("/cmd_vel", 1, cmdCallback);
+  ros::Subscriber encoder_sub = nh.subscribe("/measure", 1, encoderCallback);
   isInitialized = true;
   ros::spin();
 
