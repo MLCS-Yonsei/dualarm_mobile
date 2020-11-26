@@ -2,7 +2,7 @@
 <launch>
 
   <!-- urdf description -->
-  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find dualarm_mobile_description)/urdf/robot.urdf.xacro"/>
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find mobile_robot_description_v2)/urdf/mobile_robot_description_v2/urdf"/>
   <param name="robot_description" command="$(arg urdf_file)"/>
    
   <!--TF-->
@@ -19,7 +19,7 @@
   
   <!-- cmd_vel and odom -->
   <node pkg="dualarm_mobile_bringup" type="cmd_vel_publisher" name="cmd_vel_node" output="screen" >
-	  <param name="smoothing_factor" value="40"/> <!--  1~100, lower means smoother -->
+	  <param name="smoothing_factor" value="4"/> <!--  1~100, lower means smoother -->
   </node>
   <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odom_node" output="screen"/>
 
