@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(dualarm_mobile_description)
+
+project(mobile_robot_description_v2)
 
 find_package(catkin REQUIRED)
 
-catkin_package(
-)
+catkin_package()
 
-include_directories(
-)
+find_package(roslaunch)
 
+foreach(dir config launch meshes urdf)
+	install(DIRECTORY ${dir}/
+		DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/${dir})
+endforeach(dir)

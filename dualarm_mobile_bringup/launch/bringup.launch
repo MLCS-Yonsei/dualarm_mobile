@@ -2,7 +2,7 @@
 <launch>
 
   <!-- urdf description -->
-  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find mobile_robot_description_v2)/urdf/mobile_robot_description_v2/urdf"/>
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find dualarm_mobile_description)/urdf/mobile_robot_description_v2.urdf"/>
   <param name="robot_description" command="$(arg urdf_file)"/>
    
   <!--TF-->

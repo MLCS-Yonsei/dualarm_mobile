@@ -1,0 +1,573 @@
+<robot
+  name="mobile_robot_description_v2">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.0101607309686309 -9.67953780683928E-07 0.237866180543245"
+        rpy="0 0 0" />
+      <mass
+        value="10.5042804373645" />
+      <inertia
+        ixx="0.618683192363771"
+        ixy="-6.8985937057256E-05"
+        ixz="0.0201673989894883"
+        iyy="0.848086443881851"
+        iyz="2.37937466913905E-06"
+        izz="0.850357052885332" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.650980392156863 0.619607843137255 0.588235294117647 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="fr_suspension_link">
+    <inertial>
+      <origin
+        xyz="-0.0988658058685694 -0.012690025794712 -0.0657099721329637"
+        rpy="0 0 0" />
+      <mass
+        value="1.25988364620729" />
+      <inertia
+        ixx="0.00583305796935472"
+        ixy="0.000440492264277006"
+        ixz="4.75534433291992E-05"
+        iyy="0.0119222942351287"
+        iyz="-5.61913198324607E-06"
+        izz="0.00734108456565072" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/fr_suspension_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/fr_suspension_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fr_suspension_joint"
+    type="fixed">
+    <origin
+      xyz="0.0700000000000292 0.223749999999995 0"
+      rpy="1.5707963267949 -0.717943528932252 3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="fr_suspension_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="fr_wheel_link">
+    <inertial>
+      <origin
+        xyz="-0.00104138574943163 0.00556489981508679 0.0477976117101371"
+        rpy="0 0 0" />
+      <mass
+        value="0.144853829677274" />
+      <inertia
+        ixx="0.000332178630323552"
+        ixy="-1.7656930334075E-13"
+        ixz="7.11462794430249E-08"
+        iyy="0.000333594218647299"
+        iyz="-4.33007919978803E-14"
+        izz="6.40753755439822E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/fr_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/fr_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fr_wheel_joint"
+    type="fixed">
+    <origin
+      xyz="-0.196564899847749 -0.00893541046356211 0.0225002062623345"
+      rpy="3.14159265358979 0 1.5707963267949" />
+    <parent
+      link="fr_suspension_link" />
+    <child
+      link="fr_wheel_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="fl_suspension_link">
+    <inertial>
+      <origin
+        xyz="-0.0989082534874927 -0.0127001073145484 0.0756712850113987"
+        rpy="0 0 0" />
+      <mass
+        value="1.25958566441278" />
+      <inertia
+        ixx="0.00583103393387484"
+        ixy="0.000441490284919161"
+        ixz="-4.26055824723837E-05"
+        iyy="0.0119147528500407"
+        iyz="6.21272286709151E-06"
+        izz="0.00733477028927287" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/fl_suspension_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/fl_suspension_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fl_suspension_joint"
+    type="fixed">
+    <origin
+      xyz="0.0700000000000256 -0.233000000000005 0"
+      rpy="1.5707963267949 -0.71794352893226 3.14159265358979" />
+    <parent
+      link="base_link" />
+    <child
+      link="fl_suspension_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="fl_wheel_link">
+    <inertial>
+      <origin
+        xyz="-2.26616503340438E-11 -0.0390090682145263 -1.94855638286917E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.172494748274357" />
+      <inertia
+        ixx="0.000506186347554709"
+        ixy="1.58353523863394E-13"
+        ixz="1.6182123957964E-13"
+        iyy="9.09309783531487E-05"
+        iyz="1.15552756599077E-07"
+        izz="0.000504770746735173" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/fl_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.650980392156863 0.619607843137255 0.588235294117647 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/fl_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="fl_wheel_joint"
+    type="fixed">
+    <origin
+      xyz="-0.191 -0.0099999999999999 0.00950000000000029"
+      rpy="-1.57079632679489 -7.30346019259943E-15 3.14159265358979" />
+    <parent
+      link="fl_suspension_link" />
+    <child
+      link="fl_wheel_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="br_suspension_link">
+    <inertial>
+      <origin
+        xyz="-0.098865805868157 -0.0126900257945949 -0.0657099721354086"
+        rpy="0 0 0" />
+      <mass
+        value="1.2598836461878" />
+      <inertia
+        ixx="0.00583305796924092"
+        ixy="0.000440492264238414"
+        ixz="4.75534434063092E-05"
+        iyy="0.011922294235081"
+        iyz="-5.61913189019559E-06"
+        izz="0.00734108456568493" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/br_suspension_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/br_suspension_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="br_suspension_joint"
+    type="fixed">
+    <origin
+      xyz="-0.0699999999999825 -0.223000000000004 0"
+      rpy="1.5707963267949 -0.717717871047778 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="br_suspension_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="br_wheel_link">
+    <inertial>
+      <origin
+        xyz="-0.00104138574931634 0.0055648998207643 0.0477976117101366"
+        rpy="0 0 0" />
+      <mass
+        value="0.144853829677274" />
+      <inertia
+        ixx="0.000332178630324863"
+        ixy="-1.61835876730937E-13"
+        ixz="7.11462781628724E-08"
+        iyy="0.000333594218646865"
+        iyz="-1.06707145198637E-13"
+        izz="6.40753755448622E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/br_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/br_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="br_wheel_joint"
+    type="fixed">
+    <origin
+      xyz="-0.196564899847749 -0.00893541046356239 0.0225002062623305"
+      rpy="3.14159265358979 0 1.5707963267949" />
+    <parent
+      link="br_suspension_link" />
+    <child
+      link="br_wheel_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="bl_suspension_link">
+    <inertial>
+      <origin
+        xyz="0.000828713568886252 -0.039408252770648 -0.0172998925479582"
+        rpy="0 0 0" />
+      <mass
+        value="1.25958567642078" />
+      <inertia
+        ixx="0.00733477037132373"
+        ixy="4.26056182811348E-05"
+        ixz="6.21270673867994E-06"
+        iyy="0.00583103399472697"
+        iyz="-0.000441490299536197"
+        izz="0.0119147529874413" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/bl_suspension_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/bl_suspension_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="bl_suspension_joint"
+    type="fixed">
+    <origin
+      xyz="-0.0950918428080265 0.157249999999997 -0.0617304578347395"
+      rpy="2.42387478254193 -1.6696964172026E-08 1.57079631393795" />
+    <parent
+      link="base_link" />
+    <child
+      link="bl_suspension_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="bl_wheel_link">
+    <inertial>
+      <origin
+        xyz="2.0176326313015E-05 -1.51282279435283E-05 -0.0233337195972814"
+        rpy="0 0 0" />
+      <mass
+        value="0.213275077774491" />
+      <inertia
+        ixx="0.000543942428867376"
+        ixy="-7.93946427376621E-09"
+        ixz="1.24945313672918E-07"
+        iyy="0.000545382730395815"
+        iyz="-9.36841585366717E-08"
+        izz="0.000115061790821012" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/bl_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/bl_wheel_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="bl_wheel_joint"
+    type="fixed">
+    <origin
+      xyz="0.00999999736483237 -0.131500000206661 -0.0199999999587755"
+      rpy="-3.141592640124 1.57079631189374 -4.74565915904204E-28" />
+    <parent
+      link="bl_suspension_link" />
+    <child
+      link="bl_wheel_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="front_velodyne">
+    <inertial>
+      <origin
+        xyz="-0.000294784572101747 -2.58017720367043E-06 -0.000285474328454837"
+        rpy="0 0 0" />
+      <mass
+        value="0.58508215509282" />
+      <inertia
+        ixx="0.000631138502084681"
+        ixy="5.63943915247696E-10"
+        ixz="-4.96405554905411E-06"
+        iyy="0.000645613270625088"
+        iyz="-4.98654443852376E-08"
+        izz="0.000762529587178953" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/front_velodyne.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/front_velodyne.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="front_velodyne_joint"
+    type="fixed">
+    <origin
+      xyz="0.340000000000036 0.234999999999975 0.321460000000192"
+      rpy="9.44614453350107E-15 -5.83152723100326E-14 0.785398163397439" />
+    <parent
+      link="base_link" />
+    <child
+      link="front_velodyne" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="rear_velodyne">
+    <inertial>
+      <origin
+        xyz="-0.000294784572101081 -2.58017720344839E-06 -0.000285474328454759"
+        rpy="0 0 0" />
+      <mass
+        value="0.58508215509282" />
+      <inertia
+        ixx="0.000631138502084681"
+        ixy="5.63943915193486E-10"
+        ixz="-4.96405554905392E-06"
+        iyy="0.000645613270625088"
+        iyz="-4.98654443855087E-08"
+        izz="0.000762529587178953" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/rear_velodyne.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mobile_robot_description_v2/meshes/rear_velodyne.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rear_velodyne_joint"
+    type="fixed">
+    <origin
+      xyz="-0.339999999999968 -0.235000000000018 0.321460000000146"
+      rpy="-9.44614453350108E-15 5.83152723100326E-14 -2.35619449019235" />
+    <parent
+      link="base_link" />
+    <child
+      link="rear_velodyne" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>
