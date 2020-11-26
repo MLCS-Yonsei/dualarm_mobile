@@ -1,5 +1,5 @@
 <package>
-  <name>mobile_robot_description_v2</name>
+  <name>dualarm_mobile_description</name>
   <version>1.0.0</version>
   <description>
     <p>URDF Description package for mobile_robot_description_v2</p>
