@@ -17,14 +17,12 @@
   <!-- Sensors -->
   <!-- <include file="$(find dualarm_mobile_bringup)/launch/sensor.launch" />-->
   
-  <!-- cmd_vel and odom -->
-  <node pkg="dualarm_mobile_bringup" type="cmd_vel_publisher" name="cmd_vel_node" output="screen" >
-	  <param name="smoothing_factor" value="40"/> <!--  1~1000, lower means smoother -->
-	  <param name="smoothing_factor_slow" value="10"/> <!-- 1~1000, lower means smoother, recommanded value is 50~90" -->
-	  <param name="smoothing_threshold" value="150"/> <!-- integer, 0~4000, lower mean slow speed -->
-	  <param name="desired_frequency" value="50"/> 
+  <!-- cmd_vel for teleop -->
+  <node pkg="dualarm_mobile_bringup" type="cmd_vel_publisher" name="cmd_vel_node" output="screen" />	  
+  <!-- odom -->
+  <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odom_node" output="screen" >
+	  <param name="teleop_mode" value="true" />
   </node>
-  <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odom_node" output="screen"/>
 
   <!-- launch velodyne and rplidar -->
   <include file="$(find dualarm_mobile_bringup)/launch/bringup_rplidar_velodyne.launch">
