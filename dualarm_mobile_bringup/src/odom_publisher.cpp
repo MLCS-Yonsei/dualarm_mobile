@@ -33,6 +33,7 @@ int smoothing_factor;
 //int rpm[4] = {0, 0, 0, 0};
 TrajectoryPointMsg ref[2];
 double startTime = 0.0;
+double acc_lim = 0.005;
 
 
 void trajCallback(const FeedbackMsg::ConstPtr& feedback)
@@ -79,11 +80,11 @@ void encoderCallback(const ethercat_test::vel& msg)
   double err_u1 = u1 - linear_vel_x;
   double err_u2 = u2 - linear_vel_y;
   double err_u3 = u3 - angular_vel_z;
-  if (abs(u1) + abs(u2) + abs(u3) > 0.1)
+  if (abs(err_u1) + abs(err_u2) + abs(err_u3) > acc_lim)
   {
-    u1 -= Kd_1 * err_u1;
-    u2 -= Kd_2 * err_u2;
-    u3 -= Kd_3 * err_u3;
+    u1 = linear_vel_x  + acc_lim * err_u1;
+    u2 = linear_vel_y  + acc_lim * err_u2;
+    u3 = angular_vel_z + acc_lim * err_u3;
   }
 
   u3 *= wheelSepearation;
