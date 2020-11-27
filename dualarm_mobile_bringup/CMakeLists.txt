@@ -9,17 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   nodelet
   tf
   ethercat_test
-)
-
-catkin_package(
-  LIBRARIES 
-    dualarm_mobile_bringup
-  CATKIN_DEPENDS 
-    geometry_msgs 
-    nav_msgs 
-    roscpp 
-    std_msgs
-    ethercat_test
+  teb_local_planner
 )
 
 catkin_package(
@@ -29,8 +19,10 @@ catkin_package(
     roscpp
     geometry_msgs 
     nav_msgs
+    std_msgs
     tf
     ethercat_test
+    teb_local_planner
 )
 
 include_directories(
