@@ -59,10 +59,6 @@ void trajCallback(const FeedbackMsg::ConstPtr& feedback)
 
 void encoderCallback(const ethercat_test::vel& msg)
 {
-  if (teleop_mode == true)
-  {
-      return;
-  }
 
   double frontLeft  =  double(msg.velocity[0]);
   double frontRight = -double(msg.velocity[1]);
@@ -72,6 +68,11 @@ void encoderCallback(const ethercat_test::vel& msg)
   linear_vel_x  = paramFKLinear  * (frontRight + frontLeft + rearRight + rearLeft);
   linear_vel_y  = paramFKLinear  * (frontRight - frontLeft - rearRight + rearLeft);
   angular_vel_z = paramFKAngular * (frontRight - frontLeft + rearRight - rearLeft);
+
+  if (teleop_mode == true)
+  {
+      return;
+  }
 
   double t = ros::Time::now().toSec() - startTime;
   double dt = ref[1].time_from_start.toSec() - ref[0].time_from_start.toSec();
@@ -111,6 +112,12 @@ void encoderCallback(const ethercat_test::vel& msg)
     rpm_msg.velocity[1] = int(-paramIK * (u1 + u2 + u3));
     rpm_msg.velocity[2] = int(-paramIK * (u1 - u2 + u3));
     rpm_msg.velocity[3] = int( paramIK * (u1 + u2 - u3));
+  
+    std::cout<<"------------------------"<<std::endl;
+    std::cout<<rpm_msg.velocity[0]<<std::endl;
+    std::cout<<rpm_msg.velocity[1]<<std::endl;
+    std::cout<<rpm_msg.velocity[2]<<std::endl;
+    std::cout<<rpm_msg.velocity[3]<<std::endl;
   }
   else
   {
@@ -142,7 +149,7 @@ int main(int argc, char **argv)
   nh.param<bool>("listen_tf", listen_tf, false);
   nh.param<std::string>("odom_topic", odom_topic, "/odom");
   nh.param<std::string>("encoder_topic", encoder_topic, "/measure");
-  nh.param<bool>("teleop_mode", teleop_mode, false);
+  nh.param<bool>("/odom_node/teleop_mode", teleop_mode, false);
 
   ros::Rate loop_rate(rate);
 

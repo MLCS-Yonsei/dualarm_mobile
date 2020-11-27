@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="teleop_mode" default="false" />
 
   <!-- urdf description -->
   <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find dualarm_mobile_description)/urdf/robot.urdf.xacro"/>
@@ -21,7 +22,7 @@
   <node pkg="dualarm_mobile_bringup" type="cmd_vel_publisher" name="cmd_vel_node" output="screen" />	  
   <!-- odom -->
   <node pkg="dualarm_mobile_bringup" type="odom_publisher" name="odom_node" output="screen" >
-	  <param name="teleop_mode" value="true" />
+	  <param name="teleop_mode" value="$(arg teleop_mode)" />
   </node>
 
   <!-- launch velodyne and rplidar -->
