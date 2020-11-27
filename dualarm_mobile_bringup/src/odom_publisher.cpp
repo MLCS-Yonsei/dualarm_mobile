@@ -2,6 +2,9 @@
 #include <teb_local_planner/FeedbackMsg.h>
 #include <teb_local_planner/TrajectoryPointMsg.h>
 
+using teb_local_planner::TrajectoryPointMsg;
+using teb_local_planner::FeedbackMsg;
+
 int rate;
 
 bool broadcast_tf;
@@ -28,6 +31,7 @@ bool isInitialized = false;
 ros::Publisher rpm_pub;
 ethercat_test::vel rpm_msg;
 int smoothing_factor;
+bool teleop_mode = false;
 
 //int rpm_ref[4] = {0, 0, 0, 0};
 //int rpm[4] = {0, 0, 0, 0};
@@ -44,7 +48,8 @@ void trajCallback(const FeedbackMsg::ConstPtr& feedback)
   unsigned int selected_traj = feedback->selected_trajectory_idx;
   unsigned int end_idx = 1;
   while (t > feedback->trajectories[selected_traj].trajectory[end_idx].time_from_start.toSec())
-    ++end_idx;
+  {
+	++end_idx;
   }
   ref[0] = feedback->trajectories[selected_traj].trajectory[end_idx-1]; 
   ref[1] = feedback->trajectories[selected_traj].trajectory[end_idx];
@@ -54,6 +59,10 @@ void trajCallback(const FeedbackMsg::ConstPtr& feedback)
 
 void encoderCallback(const ethercat_test::vel& msg)
 {
+  if (teleop_mode == true)
+  {
+	  return;
+  }
 
   double frontLeft  =  double(msg.velocity[0]);
   double frontRight = -double(msg.velocity[1]);
@@ -132,6 +141,7 @@ int main(int argc, char **argv)
   nh.param<bool>("listen_tf", listen_tf, false);
   nh.param<std::string>("odom_topic", odom_topic, "/odom");
   nh.param<std::string>("encoder_topic", encoder_topic, "/measure");
+  nh.param<bool>("teleop_mode", teleop_mode, false);
 
   ros::Rate loop_rate(rate);
 

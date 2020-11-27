@@ -33,24 +33,30 @@
       <arg name="serial_port" value="$(arg serial_port_rear)" />
     </include> -->
 
-    <!-- launch lasedrsacn_to_pointcloud 
-    <node name="laserscan_to_pointcloud" pkg="vrep_holonomic_navigation" type="laserscan_to_pointcloud.py" respawn="false" output="screen" >
+    <!-- launch lasedrsacn_to_pointcloud --> 
+    <!-- <node name="laserscan_to_pointcloud" pkg="vrep_holonomic_navigation" type="laserscan_to_pointcloud.py" respawn="false" output="screen" >
         <remap from='/scan' to='/rplidar_rear/scan' />
         <remap from='/points2' to='/rplidar_rear/rplidar_points2' />
     </node>  
   </group> -->
 
+  <group ns="rear_velodyne">
   <!-- launch velodyne node -->
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
     <arg name="device_ip" value="192.168.1.201" />
+    <arg name="port" value="2368" />
     <arg name="frame_id" value="rear_velodyne" />
   </include>
+  </group>
 
+  <group ns="front_velodyne">
   <!-- launch velodyne node -->
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
     <arg name="device_ip" value="192.168.1.202" />
+    <arg name="port" value="2268" />
     <arg name="frame_id" value="front_velodyne" />
   </include>
+  </group>
 
 
   <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find rplidar_ros)/rviz/rplidar_temp.rviz" /-->
