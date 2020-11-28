@@ -7,7 +7,7 @@ ethercat_test::vel rpm_msg;
 
 void cmdCallback(const geometry_msgs::Twist& cmd_vel)
 {
-  int rpm_ref[4] = {0,0,0,0};
+  int rpm[4] = {0,0,0,0};
 
   double u1 = cmd_vel.linear.x;
   double u2 = cmd_vel.linear.y;
@@ -35,7 +35,7 @@ void cmdCallback(const geometry_msgs::Twist& cmd_vel)
    {
      for (unsigned int idx = 0; idx < 4; ++idx)
      {
-	 rpm_msg.velocity[idx] = rpm_ref[idx];
+	 rpm_msg.velocity[idx] = rpm[idx];
      }
      rpm_pub.publish(rpm_msg);
    }

@@ -40,10 +40,10 @@ double vel_prev[3] = {0.0, 0.0, 0.0};
 double startTime = 0.0;
 double acc_lim = 0.05;
 
-double frontLeft;
-double frontRight;
-double rearRight;
-double rearLeft;
+double frontLeft=0.0;
+double frontRight=0.0;
+double rearRight=0.0;
+double rearLeft=0.0;
 
 
 void cmdCallback(const geometry_msgs::Twist& cmd_vel)

@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <!--
   Used for visualising rplidar in action.  
   
@@ -7,51 +8,46 @@
   <arg name="frame_id_front" default="rplidar_front" />
   <arg name="frame_id_rear" default="rplidar_rear" />
 
-  <arg name="serial_port_front" default="/dev/ttyUSB1" />
-  <arg name="serial_port_rear" default="/dev/ttyUSB0" />
+  <arg name="serial_port_front" default="/dev/ttyUSB0" />
+  <arg name="serial_port_rear" default="/dev/ttyUSB1" />
   
-<!--
+
   <group ns="rplidar_front">
-     launch rplidar node 
     <include file="$(find dualarm_mobile_bringup)/launch/rplidar_arg.launch">
       <arg name="nodename" value="rplidar_front_node"/>
       <arg name="frame_id" value="$(arg frame_id_front)" />
       <arg name="serial_port" value="$(arg serial_port_front)" />
-    </include> -->
+    </include>
 
-    <!-- launch lasedrsacn_to_pointcloud 
-    <node name="laserscan_to_pointcloud" pkg="vrep_holonomic_navigation" type="laserscan_to_pointcloud.py" respawn="false" output="screen" >
+     
+  <node name="laserscan_to_pointcloud" pkg="vrep_holonomic_navigation" type="laserscan_to_pointcloud.py" respawn="false" output="screen" >
         <remap from='/scan' to='/rplidar_front/scan' />
         <remap from='/points2' to='/rplidar_front/rplidar_points2' />
-    </node>
-  </group> -->
-<!--
-  <group ns="rplidar_rear">
-     launch rplidar node 
+    </node> 
+  </group> 
+
+  <group ns="rplidar_rear"> 
     <include file="$(find dualarm_mobile_bringup)/launch/rplidar_arg.launch">
       <arg name="nodename" value="rplidar_rear_node"/>
       <arg name="frame_id" value="$(arg frame_id_rear)" />
       <arg name="serial_port" value="$(arg serial_port_rear)" />
-    </include> -->
-
-    <!-- launch lasedrsacn_to_pointcloud --> 
-    <!-- <node name="laserscan_to_pointcloud" pkg="vrep_holonomic_navigation" type="laserscan_to_pointcloud.py" respawn="false" output="screen" >
+    </include> 
+ 
+    <node name="laserscan_to_pointcloud" pkg="vrep_holonomic_navigation" type="laserscan_to_pointcloud.py" respawn="false" output="screen" >
         <remap from='/scan' to='/rplidar_rear/scan' />
         <remap from='/points2' to='/rplidar_rear/rplidar_points2' />
-    </node>  
-  </group> -->
+    </node>   
+  </group>
 
   <group ns="rear_velodyne">
-  <!-- launch velodyne node -->
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
     <arg name="device_ip" value="192.168.1.201" />
     <arg name="port" value="2368" />
     <arg name="frame_id" value="rear_velodyne" />
   </include>
-  </group>
+  </group> -->
 
-  <group ns="front_velodyne">
-  <!-- launch velodyne node -->
+  <group ns="front_velodyne"> 
   <include file="$(find velodyne_pointcloud)/launch/VLP16_points.launch">
     <arg name="device_ip" value="192.168.1.202" />
     <arg name="port" value="2268" />

@@ -1,5 +1,7 @@
 <robot
   name="mobile_robot_description_v2">
+  <link 
+    name="base_footprint"/>
   <link
     name="base_link">
     <inertial>
@@ -570,4 +572,70 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
+  <!-- rplidar front -->
+    <link name="rplidar_front">
+        <collision>
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <geometry>
+            <mesh filename="package://dualarm_mobile_description/meshes/rplidar.dae" scale="0.001 0.001 0.001" />
+        </geometry>
+        </collision>
+
+        <visual>
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <geometry>
+            <mesh filename="package://dualarm_mobile_description/meshes/rplidar.dae" scale="0.001 0.001 0.001" />
+        </geometry>
+        </visual>
+
+        <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+    </link>
+
+    <!-- rplidar rear -->
+    <link name="rplidar_rear">
+        <collision>
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <geometry>
+            <mesh filename="package://dualarm_mobile_description/meshes/rplidar.dae" scale="0.001 0.001 0.001" />
+        </geometry>
+        </collision>
+
+        <visual>
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <geometry>
+            <mesh filename="package://dualarm_mobile_description/meshes/rplidar.dae" scale="0.001 0.001 0.001" />
+        </geometry>
+        </visual>
+
+        <inertial>
+        <mass value="1e-5" />
+        <origin xyz="0 0 0" rpy="1.5707 0 4.71"/>
+        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+        </inertial>
+    </link>
+
+    <joint name="rplidar_front_joint" type="fixed">
+        <axis xyz="0 1 0" />
+        <origin xyz="0.284 0.189 0.633" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child link="rplidar_front"/>
+    </joint>
+
+    <joint name="rplidar_rear_joint" type="fixed">
+        <axis xyz="0 1 0" />
+        <origin xyz="-0.284 -0.189 0.633" rpy="0 0 -3.1415926535"/>
+        <parent link="base_link"/>
+        <child link="rplidar_rear"/>
+    </joint>
+
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0.117" rpy="0 0 0"/>
+    </joint>
 </robot>
