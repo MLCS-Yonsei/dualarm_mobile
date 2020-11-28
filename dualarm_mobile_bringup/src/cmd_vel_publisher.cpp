@@ -25,10 +25,10 @@ void cmdCallback(const geometry_msgs::Twist& cmd_vel)
       u2 *= scaleFactor;
       u3 *= scaleFactor;
     }
-    rpm_ref[0] = int( paramIK * (u1 - u2 - u3));
-    rpm_ref[1] = int(-paramIK * (u1 + u2 + u3));
-    rpm_ref[2] = int(-paramIK * (u1 - u2 + u3));
-    rpm_ref[3] = int( paramIK * (u1 + u2 - u3));
+    rpm[0] = int( paramIK * (u1 - u2 - u3));
+    rpm[1] = int(-paramIK * (u1 + u2 + u3));
+    rpm[2] = int(-paramIK * (u1 - u2 + u3));
+    rpm[3] = int( paramIK * (u1 + u2 - u3));
   }
 
    if (isInitialized)
@@ -51,6 +51,7 @@ int main(int argc, char **argv)
 
   rpm_pub = nh.advertise<ethercat_test::vel>("/input_msg", 1);
   ros::Subscriber cmd_vel_sub = nh.subscribe("/cmd_vel_teleop", 1, cmdCallback);
+
   isInitialized = true;
   ros::spin();
 

@@ -109,6 +109,7 @@ void publishCmdVel()
     vel_prev[0] = u1;
     vel_prev[1] = u2;
     vel_prev[2] = u3 / wheelSepearation;
+
   }
   else
   {

@@ -3,7 +3,7 @@
   <arg name="acc_lim" default="0.05" />
 
   <!-- urdf description -->
-  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find dualarm_mobile_description)/urdf/robot.urdf.xacro"/>
+  <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find dualarm_mobile_description)/urdf/mobile_robot_description_v2.urdf"/>
   <param name="robot_description" command="$(arg urdf_file)"/>
    
   <!--TF-->
