@@ -2,8 +2,8 @@
 #include <teb_local_planner/FeedbackMsg.h>
 #include <teb_local_planner/TrajectoryPointMsg.h>
 
-using teb_local_planner::TrajectoryPointMsg;
-using teb_local_planner::FeedbackMsg;
+//using teb_local_planner::TrajectoryPointMsg;
+//using teb_local_planner::FeedbackMsg;
 
 int rate;
 
@@ -22,6 +22,8 @@ nav_msgs::Odometry odom;
 ethercat_test::vel encoder;
 
 ros::Time currentTime;
+ros::Time timeCmdReceived;
+//ros::Time timeTeleopReceived;
 
 double linear_vel_x = 0.0;
 double linear_vel_y = 0.0;
@@ -30,96 +32,101 @@ double angular_vel_z = 0.0;
 bool isInitialized = false;
 ros::Publisher rpm_pub;
 ethercat_test::vel rpm_msg;
-int smoothing_factor;
-bool teleop_mode = false;
+//bool teleop_mode = false; 
 
-//int rpm_ref[4] = {0, 0, 0, 0};
-//int rpm[4] = {0, 0, 0, 0};
-TrajectoryPointMsg ref[2];
+double vel_ref[3] = {0.0, 0.0, 0.0};
+double vel_prev[3] = {0.0, 0.0, 0.0};
+//teb_local_planner::TrajectoryPointMsg ref[2];
 double startTime = 0.0;
-double acc_lim = 0.005;
+double acc_lim = 0.05;
+
+double frontLeft;
+double frontRight;
+double rearRight;
+double rearLeft;
 
 
-void trajCallback(const FeedbackMsg::ConstPtr& feedback)
+void cmdCallback(const geometry_msgs::Twist& cmd_vel)
 {
-  
-  startTime = feedback->header.stamp.toSec();
-  double t = ros::Time::now().toSec() - startTime;
-  unsigned int selected_traj = feedback->selected_trajectory_idx;
-  unsigned int end_idx = 1;
-  while (t > feedback->trajectories[selected_traj].trajectory[end_idx].time_from_start.toSec())
-  {
-	++end_idx;
-  }
-  ref[0] = feedback->trajectories[selected_traj].trajectory[end_idx-1]; 
-  ref[1] = feedback->trajectories[selected_traj].trajectory[end_idx];
-  
+  vel_ref[0] = cmd_vel.linear.x;
+  vel_ref[1] = cmd_vel.linear.y;
+  vel_ref[2] = cmd_vel.angular.z;
+  timeCmdReceived = ros::Time::now();
 }
 
 
 void encoderCallback(const ethercat_test::vel& msg)
 {
-  if (teleop_mode == true)
-  {
-	  return;
-  }
+  frontLeft  = double( msg.velocity[0]);
+  frontRight = double(-msg.velocity[1]);
+  rearRight  = double(-msg.velocity[2]);
+  rearLeft   = double( msg.velocity[3]);
+}
 
-  double frontLeft  =  double(msg.velocity[0]);
-  double frontRight = -double(msg.velocity[1]);
-  double rearRight  = -double(msg.velocity[2]);
-  double rearLeft   =  double(msg.velocity[3]);
 
+void computeVelocity()
+{
   linear_vel_x  = paramFKLinear  * (frontRight + frontLeft + rearRight + rearLeft);
   linear_vel_y  = paramFKLinear  * (frontRight - frontLeft - rearRight + rearLeft);
   angular_vel_z = paramFKAngular * (frontRight - frontLeft + rearRight - rearLeft);
+}
 
-  double t = ros::Time::now().toSec() - startTime;
-  double dt = ref[1].time_from_start.toSec() - ref[0].time_from_start.toSec();
 
-  double a = t / dt;
-  if (a < 0)
-    a = 0.0;
-  else if (a > 1)
-    a = 1.0;
-  double b = 1.0 - a;
+void publishCmdVel()
+{
+  double err_u1 = vel_ref[0] - vel_prev[0];
+  double err_u2 = vel_ref[1] - vel_prev[1];
+  double err_u3 = vel_ref[2] - vel_prev[2];
+  err_u3 *= wheelSepearation;
 
-  double u1 = a * ref[1].velocity.linear.x + b * ref[0].velocity.linear.x;
-  double u2 = a * ref[1].velocity.linear.y + b * ref[0].velocity.linear.y;
-  double u3 = a * ref[1].velocity.angular.z + b * ref[0].velocity.angular.z;
-  double err_u1 = u1 - linear_vel_x;
-  double err_u2 = u2 - linear_vel_y;
-  double err_u3 = u3 - angular_vel_z;
-  if (abs(err_u1) + abs(err_u2) + abs(err_u3) > acc_lim)
-  {
-    u1 = linear_vel_x  + acc_lim * err_u1;
-    u2 = linear_vel_y  + acc_lim * err_u2;
-    u3 = angular_vel_z + acc_lim * err_u3;
+  double normDesiredAcc = abs(err_u1) + abs(err_u2) + abs(err_u3);
+  if (normDesiredAcc > acc_lim)
+  { 
+    double scaleFactorAcc = acc_lim / normDesiredAcc;
+    err_u1 *= scaleFactorAcc;
+    err_u2 *= scaleFactorAcc;
+    err_u3 *= scaleFactorAcc;
   }
 
-  u3 *= wheelSepearation;
-  double normDesired = abs(u1) + abs(u2) + abs(u3);
-  if (normDesired > 0.0001)
+  double u1 = err_u1 + vel_prev[0];
+  double u2 = err_u2 + vel_prev[1];
+  double u3 = err_u3 + wheelSepearation * vel_prev[2];
+
+  double normDesiredVel = abs(u1) + abs(u2) + abs(u3);
+  if (normDesiredVel > 1e-5)
   {
-    if (normDesired > normLimit)
+    if (normDesiredVel > vel_lim)
     {
-      double scaleFactor = normLimit / normDesired;
-      u1 *= scaleFactor;
-      u2 *= scaleFactor;
-      u3 *= scaleFactor;
+      double scaleFactorVel = vel_lim / normDesiredVel;
+      u1 *= scaleFactorVel;
+      u2 *= scaleFactorVel;
+      u3 *= scaleFactorVel;
     }
-    rpm_msg.velocity[0] = int( paramIK * (u1 - u2 - u3));
-    rpm_msg.velocity[1] = int(-paramIK * (u1 + u2 + u3));
-    rpm_msg.velocity[2] = int(-paramIK * (u1 - u2 + u3));
-    rpm_msg.velocity[3] = int( paramIK * (u1 + u2 - u3));
+    rpm_msg.velocity[0] = int32_t( paramIK * (u1 - u2 - u3));
+    rpm_msg.velocity[1] = int32_t(-paramIK * (u1 + u2 + u3));
+    rpm_msg.velocity[2] = int32_t(-paramIK * (u1 - u2 + u3));
+    rpm_msg.velocity[3] = int32_t( paramIK * (u1 + u2 - u3));
+    vel_prev[0] = u1;
+    vel_prev[1] = u2;
+    vel_prev[2] = u3 / wheelSepearation;
+
   }
   else
   {
     for (unsigned int idx = 0; idx < 4; ++idx)
       rpm_msg.velocity[idx] = 0;
+    vel_prev[0] = 0.0;
+    vel_prev[1] = 0.0;
+    vel_prev[2] = 0.0;
   }
 
   if (isInitialized)
   {
+    //std::cout<<"------------------------"<<std::endl;
+    //std::cout<<rpm_msg.velocity[0]<<std::endl;
+    //std::cout<<rpm_msg.velocity[1]<<std::endl;
+    //std::cout<<rpm_msg.velocity[2]<<std::endl;
+    //std::cout<<rpm_msg.velocity[3]<<std::endl;
     rpm_pub.publish(rpm_msg);
   }
 
@@ -141,15 +148,25 @@ int main(int argc, char **argv)
   nh.param<bool>("listen_tf", listen_tf, false);
   nh.param<std::string>("odom_topic", odom_topic, "/odom");
   nh.param<std::string>("encoder_topic", encoder_topic, "/measure");
-  nh.param<bool>("teleop_mode", teleop_mode, false);
+  //nh.param<bool>("/odom_node/teleop_mode", teleop_mode, false);
+  nh.param<double>("/odom_node/acc_lim", acc_lim, 0.1);
 
+
+ 
   ros::Rate loop_rate(rate);
 
   rpm_pub = nh.advertise<ethercat_test::vel>("/input_msg", 1);
   ros::Publisher odom_pub = nh.advertise<nav_msgs::Odometry>(odom_topic, 10);
   ros::Subscriber encoder_sub = nh.subscribe(encoder_topic, 1, encoderCallback);
-  ros::Subscriber traj_sub = nh.subscribe("/move_base/TebLocalPlannerROS/teb_feedback", 1, trajCallback);
+  //ros::Subscriber traj_sub = nh.subscribe("/move_base/TebLocalPlannerROS/teb_feedback", 1, trajCallback);
+  ros::Subscriber cmd_vel_sub = nh.subscribe("/cmd_vel", 1, cmdCallback);
+  //ros::Subscriber telop_sub = nh.subscribe("/cmd_vel_teleop", 1, teleopCallback);
   isInitialized = true;
+
+  //if (teleop_mode == true)
+  //{
+  //    ROS_INFO_STREAM("Teleop control mode. please check bringup.launch param");
+  //}
 
   transform.setIdentity();
   if (listen_tf)
@@ -178,12 +195,13 @@ int main(int argc, char **argv)
     else
     {
       currentTime = ros::Time::now();
+      computeVelocity();
 
       double stepTime = currentTime.toSec() - odom.header.stamp.toSec();
       tf::Transform tf_from_vel;
       tf_from_vel.setIdentity();
 
-      if ( abs(angular_vel_z) < 0.0001 )
+      if ( abs(angular_vel_z) < 1e-5 )
       {
         odom.pose.covariance[35] = 0.01;
         odom.twist.covariance[35] = 0.01;
@@ -224,9 +242,12 @@ int main(int argc, char **argv)
     odom.pose.covariance[21] = 0.0001;
     odom.pose.covariance[28] = 0.0001;
 		
-    if (abs(odom.twist.twist.angular.z) < 0.0001) {
+    if (abs(odom.twist.twist.angular.z) < 0.0001)
+    {
       odom.pose.covariance[35] = 0.0001;
-    }else{
+    }
+    else
+    {
       odom.pose.covariance[35] = 0.01;
     }
 
@@ -236,13 +257,40 @@ int main(int argc, char **argv)
     odom.twist.covariance[21] = 0.0001;
     odom.twist.covariance[28] = 0.0001;
 		
-    if (abs(odom.twist.twist.angular.z) < 0.0001) {
+    if (abs(odom.twist.twist.angular.z) < 0.0001)
+    {
       odom.twist.covariance[35] = 0.0001;
-    }else{
+    }
+    else
+    {
+      odom.twist.covariance[35] = 0.01;
+    }
+
+    if (abs(odom.twist.twist.angular.z) < 0.0001)
+    {
+      odom.twist.covariance[35] = 0.0001;
+    }
+    else
+    {
       odom.twist.covariance[35] = 0.01;
     }
 
     odom_pub.publish(odom);
+
+    if (ros::Time::now().toSec() - timeCmdReceived.toSec() > 0.5)
+    {
+    	for (unsigned int idx=0; idx<3; ++idx)
+      {
+	      vel_ref[idx] = 0;
+      }
+    }
+    
+    publishCmdVel();
+
+    //    if (ros::Time::now().toSec() - timeTeleopReceived.toSec() > 1) {
+//	teleop_mode = false;
+//	std::cout<<"[INFO] no teleop input(cmd_vel_teleop) for 1.0 sec. changed 'teleop_mode' to false"<<std::endl;
+    //}
 
     loop_rate.sleep();
 
@@ -251,3 +299,4 @@ int main(int argc, char **argv)
   return 0;
 
 } // end main
+

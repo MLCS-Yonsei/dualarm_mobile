@@ -1,6 +1,6 @@
 #ifndef PUBLISHER_H
 #define PUBLISHER_H
-
+#include <stdint.h>
 #include <ros/ros.h>
 
 #include <geometry_msgs/Twist.h>
@@ -22,7 +22,7 @@ double wheelSepearation = 0.3857;
 double paramFKLinear = wheelRadius * rpm_to_radps / gearRatio / 4.0;
 double paramFKAngular = paramFKLinear / wheelSepearation;
 double paramIK = radps_to_rpm * gearRatio / wheelRadius;
-double normLimit = 0.74;
+double vel_lim = 0.74;
 
 
 #endif

@@ -7,7 +7,7 @@ ethercat_test::vel rpm_msg;
 
 void cmdCallback(const geometry_msgs::Twist& cmd_vel)
 {
-  int rpm[4] = {0, 0, 0, 0};
+  int rpm_ref[4] = {0,0,0,0};
 
   double u1 = cmd_vel.linear.x;
   double u2 = cmd_vel.linear.y;
@@ -18,9 +18,9 @@ void cmdCallback(const geometry_msgs::Twist& cmd_vel)
 
   if (normDesired > 0.0001)
   {
-    if (normDesired > normLimit)
+    if (normDesired > vel_lim)
     {
-      double scaleFactor = normLimit / normDesired;
+      double scaleFactor = vel_lim / normDesired;
       u1 *= scaleFactor;
       u2 *= scaleFactor;
       u3 *= scaleFactor;
@@ -31,16 +31,16 @@ void cmdCallback(const geometry_msgs::Twist& cmd_vel)
     rpm[3] = int( paramIK * (u1 + u2 - u3));
   }
 
-  if (isInitialized)
-  {
-    for (unsigned int idx = 0; idx < 4; ++idx)
-    {
-        rpm_msg.velocity[idx] = rpm[idx];
-    }
-
-    rpm_pub.publish(rpm_msg);
+   if (isInitialized)
+   {
+     for (unsigned int idx = 0; idx < 4; ++idx)
+     {
+	 rpm_msg.velocity[idx] = rpm_ref[idx];
+     }
+     rpm_pub.publish(rpm_msg);
    }
 }
+
 
 int main(int argc, char **argv)
 {
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
   rpm_pub = nh.advertise<ethercat_test::vel>("/input_msg", 1);
   ros::Subscriber cmd_vel_sub = nh.subscribe("/cmd_vel_teleop", 1, cmdCallback);
-  
+
   isInitialized = true;
   ros::spin();
 
