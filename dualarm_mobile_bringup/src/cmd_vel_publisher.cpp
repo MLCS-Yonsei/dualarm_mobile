@@ -18,9 +18,9 @@ void cmdCallback(const geometry_msgs::Twist& cmd_vel)
 
   if (normDesired > 0.0001)
   {
-    if (normDesired > normLimit)
+    if (normDesired > vel_lim)
     {
-      double scaleFactor = normLimit / normDesired;
+      double scaleFactor = vel_lim / normDesired;
       u1 *= scaleFactor;
       u2 *= scaleFactor;
       u3 *= scaleFactor;
