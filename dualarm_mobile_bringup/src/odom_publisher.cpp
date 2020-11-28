@@ -22,7 +22,8 @@ nav_msgs::Odometry odom;
 ethercat_test::vel encoder;
 
 ros::Time currentTime;
-ros::Time timeCmdRecieved;
+ros::Time timeCmdReceived;
+//ros::Time timeTeleopReceived;
 
 double linear_vel_x = 0.0;
 double linear_vel_y = 0.0;
@@ -31,7 +32,7 @@ double angular_vel_z = 0.0;
 bool isInitialized = false;
 ros::Publisher rpm_pub;
 ethercat_test::vel rpm_msg;
-bool teleop_mode = false; 
+//bool teleop_mode = false; 
 
 double vel_ref[3] = {0.0, 0.0, 0.0};
 //teb_local_planner::TrajectoryPointMsg ref[2];
@@ -61,8 +62,14 @@ void cmdCallback(const geometry_msgs::Twist& cmd_vel)
   vel_ref[0] = cmd_vel.linear.x;
   vel_ref[1] = cmd_vel.linear.y;
   vel_ref[2] = cmd_vel.angular.z;
-  timeCmdRecieved = ros::Time::now();
+  timeCmdReceived = ros::Time::now();
 }
+
+//void teleopCallback(const geometry_msgs::Twist& cmd_vel_teleop)
+//{
+//  teleop_mode = true;
+//  timeTeleopReceived = ros::Time::now();
+//}
 
 
 void encoderCallback(const ethercat_test::vel& msg)
@@ -77,11 +84,11 @@ void encoderCallback(const ethercat_test::vel& msg)
   linear_vel_y  = paramFKLinear  * (frontRight - frontLeft - rearRight + rearLeft);
   angular_vel_z = paramFKAngular * (frontRight - frontLeft + rearRight - rearLeft);
 
-  if (teleop_mode == true)
-  {
-    std::cout<<"[INFO] telelop_mode ..., check ros param(/odom_node/teleop_mode)"<<std::endl;
-    return;
-  }
+  //if (teleop_mode == true)
+  //{
+  //  std::cout<<"[INFO] telelop_mode ..., check ros param(/odom_node/teleop_mode)"<<std::endl;
+  //  return;
+  //}
 
   //double t = ros::Time::now().toSec() - startTime;
   //double dt = ref[1].time_from_start.toSec() - ref[0].time_from_start.toSec();
@@ -164,7 +171,7 @@ int main(int argc, char **argv)
   nh.param<bool>("listen_tf", listen_tf, false);
   nh.param<std::string>("odom_topic", odom_topic, "/odom");
   nh.param<std::string>("encoder_topic", encoder_topic, "/measure");
-  nh.param<bool>("/odom_node/teleop_mode", teleop_mode, false);
+  //nh.param<bool>("/odom_node/teleop_mode", teleop_mode, false);
 
   ros::Rate loop_rate(rate);
 
@@ -173,12 +180,13 @@ int main(int argc, char **argv)
   ros::Subscriber encoder_sub = nh.subscribe(encoder_topic, 1, encoderCallback);
   //ros::Subscriber traj_sub = nh.subscribe("/move_base/TebLocalPlannerROS/teb_feedback", 1, trajCallback);
   ros::Subscriber cmd_vel_sub = nh.subscribe("/cmd_vel", 1, cmdCallback);
+  //ros::Subscriber telop_sub = nh.subscribe("/cmd_vel_teleop", 1, teleopCallback);
   isInitialized = true;
 
-  if (teleop_mode == true)
-  {
-      ROS_INFO_STREAM("Teleop control mode. please check bringup.launch param");
-  }
+  //if (teleop_mode == true)
+  //{
+  //    ROS_INFO_STREAM("Teleop control mode. please check bringup.launch param");
+  //}
 
   transform.setIdentity();
   if (listen_tf)
@@ -279,12 +287,16 @@ int main(int argc, char **argv)
 
     odom_pub.publish(odom);
 
-    if (ros::Time::now().toSec() - timeCmdRecieved.toSec() > 0.5) {
-        std::cout<<"[INFO] no teb input(cmd_vel) input"<<std::endl;
+    if (ros::Time::now().toSec() - timeCmdReceived.toSec() > 0.5) {
+        std::cout<<"[INFO] no teb input(cmd_vel) input. motor fixed"<<std::endl;
     	for (unsigned int idx=0; idx<3; ++idx) {
 	    vel_ref[idx] = 0;
 	}
     }
+//    if (ros::Time::now().toSec() - timeTeleopReceived.toSec() > 1) {
+//	teleop_mode = false;
+//	std::cout<<"[INFO] no teleop input(cmd_vel_teleop) for 1.0 sec. changed 'teleop_mode' to false"<<std::endl;
+    //}
 
     loop_rate.sleep();
 

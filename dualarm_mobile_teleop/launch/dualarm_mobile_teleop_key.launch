@@ -1,5 +1,4 @@
 <launch>
-  <node pkg="dualarm_mobile_teleop" type="dualarm_mobile_teleop_key" name="dualarm_mobile_teleop_keyboard"  output="screen">
-    <remap from="cmd_vel" to="cmd_vel_teleop" /> 
+  <node pkg="dualarm_mobile_teleop" type="dualarm_mobile_teleop_key" name="dualarm_mobile_teleop_keyboard"  output="screen"> 
   </node>
 </launch>
