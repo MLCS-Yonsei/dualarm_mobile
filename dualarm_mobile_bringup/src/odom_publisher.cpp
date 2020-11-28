@@ -35,6 +35,7 @@ ethercat_test::vel rpm_msg;
 //bool teleop_mode = false; 
 
 double vel_ref[3] = {0.0, 0.0, 0.0};
+double vel_prev[3] = {0.0, 0.0, 0.0};
 //teb_local_planner::TrajectoryPointMsg ref[2];
 double startTime = 0.0;
 double acc_lim = 0.05;
@@ -43,29 +44,6 @@ double frontLeft;
 double frontRight;
 double rearRight;
 double rearLeft;
-int32_t sum_frontLeft;
-int32_t sum_frontRight;
-int32_t sum_rearRight;
-int32_t sum_rearLeft;
-int8_t encoder_count = 0;
-bool encoder_lock = false;
-
-
-//void trajCallback(const teb_local_planner::FeedbackMsg::ConstPtr& feedback)
-//{
-//
-//  startTime = feedback->header.stamp.toSec();
-//  double t = ros::Time::now().toSec() - startTime;
-//  unsigned int selected_traj = feedback->selected_trajectory_idx;
-//  unsigned int end_idx = 1;
-//  while (t > feedback->trajectories[selected_traj].trajectory[end_idx].time_from_start.toSec())
-//  {
-//    ++end_idx;
-//  }
-//  ref[0] = feedback->trajectories[selected_traj].trajectory[end_idx-1]; 
-//  ref[1] = feedback->trajectories[selected_traj].trajectory[end_idx];
-//
-//}
 
 
 void cmdCallback(const geometry_msgs::Twist& cmd_vel)
@@ -76,64 +54,29 @@ void cmdCallback(const geometry_msgs::Twist& cmd_vel)
   timeCmdReceived = ros::Time::now();
 }
 
-//void teleopCallback(const geometry_msgs::Twist& cmd_vel_teleop)
-//{
-//  teleop_mode = true;
-//  timeTeleopReceived = ros::Time::now();
-//}
-
 
 void encoderCallback(const ethercat_test::vel& msg)
 {
-  while (true)
-  {
-    if (!encoder_lock)
-    {
-      encoder_lock = true;
-      ++encoder_count;
-      sum_frontLeft  +=  msg.velocity[0];
-      sum_frontRight += -msg.velocity[1];
-      sum_rearRight  += -msg.velocity[2];
-      sum_rearLeft   +=  msg.velocity[3];
-      encoder_lock = false;
-      break;
-    }
-  }
+  frontLeft  = double( msg.velocity[0]);
+  frontRight = double(-msg.velocity[1]);
+  rearRight  = double(-msg.velocity[2]);
+  rearLeft   = double( msg.velocity[3]);
 }
 
 
 void computeVelocity()
 {
-  double denominator = 0;
-  while (true)
-  {
-    if (!encoder_lock && encoder_count > 0)
-    {
-      encoder_lock = true;
-      denominator = double(encoder_count);
-      frontLeft  = double(sum_frontLeft);
-      frontRight = double(sum_frontRight);
-      rearRight  = double(sum_rearRight);
-      rearLeft   = double(sum_rearLeft);
-      encoder_lock = false;
-      break;
-    }
-  }
-  frontLeft  /= denominator;
-  frontRight /= denominator;
-  rearRight  /= denominator;
-  rearLeft   /= denominator;
-  linear_vel_x  = paramFKLinear  * frontRight + frontLeft + rearRight + rearLeft);
-  linear_vel_y  = paramFKLinear  * frontRight - frontLeft - rearRight + rearLeft);
-  angular_vel_z = paramFKAngular * frontRight - frontLeft + rearRight - rearLeft);
+  linear_vel_x  = paramFKLinear  * (frontRight + frontLeft + rearRight + rearLeft);
+  linear_vel_y  = paramFKLinear  * (frontRight - frontLeft - rearRight + rearLeft);
+  angular_vel_z = paramFKAngular * (frontRight - frontLeft + rearRight - rearLeft);
 }
 
 
 void publishCmdVel()
 {
-  double err_u1 = vel_ref[0] - linear_vel_x;
-  double err_u2 = vel_ref[1] - linear_vel_y;
-  double err_u3 = vel_ref[2] - angular_vel_z;
+  double err_u1 = vel_ref[0] - vel_prev[0];
+  double err_u2 = vel_ref[1] - vel_prev[1];
+  double err_u3 = vel_ref[2] - vel_prev[2];
   err_u3 *= wheelSepearation;
 
   double normDesiredAcc = abs(err_u1) + abs(err_u2) + abs(err_u3);
@@ -145,12 +88,12 @@ void publishCmdVel()
     err_u3 *= scaleFactorAcc;
   }
 
-  double u1 = err_u1 + linear_vel_x;
-  double u2 = err_u2 + linear_vel_y;
-  double u3 = err_u3 + wheelSepearation * angular_vel_z;
+  double u1 = err_u1 + vel_prev[0];
+  double u2 = err_u2 + vel_prev[1];
+  double u3 = err_u3 + wheelSepearation * vel_prev[2];
 
   double normDesiredVel = abs(u1) + abs(u2) + abs(u3);
-  if (normDesiredVel > 0.0001)
+  if (normDesiredVel > 1e-5)
   {
     if (normDesiredVel > vel_lim)
     {
@@ -163,21 +106,26 @@ void publishCmdVel()
     rpm_msg.velocity[1] = int32_t(-paramIK * (u1 + u2 + u3));
     rpm_msg.velocity[2] = int32_t(-paramIK * (u1 - u2 + u3));
     rpm_msg.velocity[3] = int32_t( paramIK * (u1 + u2 - u3));
-  
+    vel_prev[0] = u1;
+    vel_prev[1] = u2;
+    vel_prev[2] = u3 / wheelSepearation;
   }
   else
   {
     for (unsigned int idx = 0; idx < 4; ++idx)
       rpm_msg.velocity[idx] = 0;
+    vel_prev[0] = 0.0;
+    vel_prev[1] = 0.0;
+    vel_prev[2] = 0.0;
   }
 
   if (isInitialized)
   {
-    std::cout<<"------------------------"<<std::endl;
-    std::cout<<rpm_msg.velocity[0]<<std::endl;
-    std::cout<<rpm_msg.velocity[1]<<std::endl;
-    std::cout<<rpm_msg.velocity[2]<<std::endl;
-    std::cout<<rpm_msg.velocity[3]<<std::endl;
+    //std::cout<<"------------------------"<<std::endl;
+    //std::cout<<rpm_msg.velocity[0]<<std::endl;
+    //std::cout<<rpm_msg.velocity[1]<<std::endl;
+    //std::cout<<rpm_msg.velocity[2]<<std::endl;
+    //std::cout<<rpm_msg.velocity[3]<<std::endl;
     rpm_pub.publish(rpm_msg);
   }
 
@@ -200,7 +148,10 @@ int main(int argc, char **argv)
   nh.param<std::string>("odom_topic", odom_topic, "/odom");
   nh.param<std::string>("encoder_topic", encoder_topic, "/measure");
   //nh.param<bool>("/odom_node/teleop_mode", teleop_mode, false);
+  nh.param<double>("/odom_node/acc_lim", acc_lim, 0.1);
 
+
+ 
   ros::Rate loop_rate(rate);
 
   rpm_pub = nh.advertise<ethercat_test::vel>("/input_msg", 1);
@@ -249,7 +200,7 @@ int main(int argc, char **argv)
       tf::Transform tf_from_vel;
       tf_from_vel.setIdentity();
 
-      if ( abs(angular_vel_z) < 0.0001 )
+      if ( abs(angular_vel_z) < 1e-5 )
       {
         odom.pose.covariance[35] = 0.01;
         odom.twist.covariance[35] = 0.01;
@@ -327,14 +278,15 @@ int main(int argc, char **argv)
 
     if (ros::Time::now().toSec() - timeCmdReceived.toSec() > 0.5)
     {
-      std::cout<<"[INFO] no teb input(cmd_vel) input. motor fixed"<<std::endl;
     	for (unsigned int idx=0; idx<3; ++idx)
       {
 	      vel_ref[idx] = 0;
       }
     }
+    
     publishCmdVel();
-//    if (ros::Time::now().toSec() - timeTeleopReceived.toSec() > 1) {
+
+    //    if (ros::Time::now().toSec() - timeTeleopReceived.toSec() > 1) {
 //	teleop_mode = false;
 //	std::cout<<"[INFO] no teleop input(cmd_vel_teleop) for 1.0 sec. changed 'teleop_mode' to false"<<std::endl;
     //}
@@ -346,3 +298,4 @@ int main(int argc, char **argv)
   return 0;
 
 } // end main
+
