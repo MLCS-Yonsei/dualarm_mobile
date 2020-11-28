@@ -79,6 +79,7 @@ void encoderCallback(const ethercat_test::vel& msg)
 
   if (teleop_mode == true)
   {
+    std::cout<<"[INFO] telelop_mode ..., check ros param(/odom_node/teleop_mode)"<<std::endl;
     return;
   }
 
@@ -95,17 +96,21 @@ void encoderCallback(const ethercat_test::vel& msg)
   //double u1 = a * ref[1].velocity.linear.x + b * ref[0].velocity.linear.x;
   //double u2 = a * ref[1].velocity.linear.y + b * ref[0].velocity.linear.y;
   //double u3 = a * ref[1].velocity.angular.z + b * ref[0].velocity.angular.z;
+  double u1 = 0;
+  double u2 = 0;
+  double u3 = 0;
   double err_u1 = vel_ref[0] - linear_vel_x;
   double err_u2 = vel_ref[1] - linear_vel_y;
   double err_u3 = vel_ref[2] - angular_vel_z;
-  double err_u3 *= wheelSepearation;
+  err_u3 *= wheelSepearation;
+
   double normDesiredAcc = abs(err_u1) + abs(err_u2) + abs(err_u3);
   if (normDesiredAcc > acc_lim)
   { 
     double scaleFactorAcc = acc_lim / normDesiredAcc;
-    double u1 = linear_vel_x  + scaleFactorAcc * err_u1;
-    double u2 = linear_vel_y  + scaleFactorAcc * err_u2;
-    double u3 = wheelSepearation * angular_vel_z + scaleFactorAcc * err_u3;
+    u1 = linear_vel_x  + scaleFactorAcc * err_u1;
+    u2 = linear_vel_y  + scaleFactorAcc * err_u2;
+    u3 = wheelSepearation * angular_vel_z + scaleFactorAcc * err_u3;
   }
 
   double normDesiredVel = abs(u1) + abs(u2) + abs(u3);
@@ -275,7 +280,10 @@ int main(int argc, char **argv)
     odom_pub.publish(odom);
 
     if (ros::Time::now().toSec() - timeCmdRecieved.toSec() > 0.5) {
-      vel_ref[3] = {0.0, 0.0, 0.0};
+        std::cout<<"[INFO] no teb input(cmd_vel) input"<<std::endl;
+    	for (unsigned int idx=0; idx<3; ++idx) {
+	    vel_ref[idx] = 0;
+	}
     }
 
     loop_rate.sleep();
