@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="acc_lim" default="0.05" />
+  <arg name="acc_lim" default="0.0025" />
 
   <!-- urdf description -->
   <arg name="urdf_file" default="$(find xacro)/xacro --inorder $(find dualarm_mobile_description)/urdf/robot.urdf.xacro"/>
