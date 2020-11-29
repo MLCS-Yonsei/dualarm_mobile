@@ -35,7 +35,7 @@ MAX_LIN_VEL = 0.8
 MAX_ANG_VEL = 1.5488
 
 LIN_VEL_STEP_SIZE = 0.01
-ANG_VEL_STEP_SIZE = 0.1
+ANG_VEL_STEP_SIZE = 0.03
 
 msg = """
 Control Your dualarm_mobile!

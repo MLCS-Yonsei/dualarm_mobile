@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <robot
   name="mobile_robot_description_v2">
   <link 
@@ -621,14 +622,14 @@
 
     <joint name="rplidar_front_joint" type="fixed">
         <axis xyz="0 1 0" />
-        <origin xyz="0.284 0.189 0.633" rpy="0 0 0"/>
+        <origin xyz="0.284 0.189 0.633" rpy="0 0 3.1415926535"/>
         <parent link="base_link"/>
         <child link="rplidar_front"/>
     </joint>
 
     <joint name="rplidar_rear_joint" type="fixed">
         <axis xyz="0 1 0" />
-        <origin xyz="-0.284 -0.189 0.633" rpy="0 0 -3.1415926535"/>
+        <origin xyz="-0.284 -0.189 0.633" rpy="0 0 0"/>
         <parent link="base_link"/>
         <child link="rplidar_rear"/>
     </joint>
